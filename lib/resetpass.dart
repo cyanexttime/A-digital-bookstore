@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:oms/components/toast.dart';
 
 class resetPassword extends StatefulWidget {
   const resetPassword({Key? key}) : super(key: key);
@@ -13,9 +14,14 @@ class _resetPasswordState extends State<resetPassword> {
   TextEditingController _newPasswordController = TextEditingController();
 
   void _sendNewPassword(BuildContext context) async{
-      String newPassword = _newPasswordController.text;
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: newPassword);
-
+      try{
+        String newPassword = _newPasswordController.text;
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: newPassword);
+        showToast('Password reset email sent');
+      }
+      catch (e){
+        showToast('Error: $e');
+      }
   }
   @override
   Widget build(BuildContext context) {
