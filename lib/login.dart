@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oms/components/toast.dart';
 
 import 'firebase_auth_implementation/firebase_auth_services.dart';
 
@@ -15,6 +17,7 @@ class _MyLoginState extends State<MyLogin> {
   TextEditingController _passwordController = TextEditingController();
   
   //ket noi toi dich vu firebae
+  bool _isSignIn = false;
   final FirebaseAuthService _auth = new FirebaseAuthService();
 
   void dispose() {
@@ -32,16 +35,22 @@ class _MyLoginState extends State<MyLogin> {
   }
 
    void _signIn(BuildContext context) async{
+    setState(() {
+      _isSignIn = true;
+    });
       String emailName = _emailController.text;
       String passwordName = _passwordController.text;
 
       User? user = await _auth.signInWithEmailAndPassword(emailName, passwordName);
+      setState(() {
+        _isSignIn = false;
+      });
+
       if(user != null){
-        print('Dang nhap thanh cong');
+        showToast('Dang nhap thanh cong');
         Navigator.pushNamed(context, 'home');
-      }else{
-        print('Dang nhap that bai');
       }
+      
   }
 
 
@@ -138,14 +147,15 @@ class _MyLoginState extends State<MyLogin> {
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
+                                children: _isSignIn ? [CircularProgressIndicator(color: Colors.white)] : <Widget>[
                                   Text('LOG IN'),
                                   Icon(
                                     Icons.lock,
                                     color: Colors.white,
                                   ),
                                 ],
-                              )),
+                              ),
+                            ),
                         ],
                       ),
                       SizedBox(height: 30.0),
