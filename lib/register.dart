@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:oms/firebase_auth_implementation/firebase_auth_services.dart';
 
 class myRegister extends StatefulWidget {
@@ -56,12 +57,7 @@ class _myRegisterState extends State<myRegister> {
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              'assets/login.png',
-            ),
-            fit: BoxFit.cover,
-          ),
+          color: Color(0xFFF1DCD1),
         ),
         child: Scaffold(
           appBar: AppBar(
@@ -73,25 +69,27 @@ class _myRegisterState extends State<myRegister> {
                 },
                 child: Icon(
                   Icons.arrow_back_ios_rounded,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
-              )),
+              )
+            ),
           backgroundColor: Colors.transparent,
           body: Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'REGISTER\n NOW',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40.0,
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        width: 215,
+                        height: 215,
+                        child:Image.asset('assets/logo.png')
+                      )
                     ),
-                  ),
-                ],
-              ),
+                    // Thay thế 'path_to_your_logo.png' bằng đường dẫn thực tế đến logo của bạ
+                  ],
+                ),
               SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.only(

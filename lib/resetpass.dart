@@ -20,15 +20,9 @@ class _resetPasswordState extends State<resetPassword> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      
       child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              'assets/login.png',
-            ),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: Color(0xFFF1DCD1),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
@@ -37,17 +31,9 @@ class _resetPasswordState extends State<resetPassword> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(
-                      top: 60.0,
-                    ),
-                    child: Text(
-                      'RESET \n NOW',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40.0,
-                      ),
-                    ),
+                    width: 300,
+                    height: 300,
+                    child: Image.asset('assets/main_logo.png'),
                   ),
                 ],
               ),

@@ -50,12 +50,7 @@ class _MyLoginState extends State<MyLogin> {
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              'assets/login.png',
-            ),
-            fit: BoxFit.cover,
-          ),
+          color: Color(0xFFF1DCD1),
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -67,20 +62,12 @@ class _MyLoginState extends State<MyLogin> {
                     Center
                     (
                       child:Container(
-                        width: 180,
-                        height: 180,
+                        width: 250,
+                        height: 250,
                         child:Image.asset('assets/logo.png')
                       )
                     ),
-                    // Thay thế 'path_to_your_logo.png' bằng đường dẫn thực tế đến logo của bạn
-                    Text(
-                      'LOGIN',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40.0,
-                      ),
-                    ),
+                    // Thay thế 'path_to_your_logo.png' bằng đường dẫn thực tế đến logo của bạ
                   ],
                 ),
 
@@ -149,7 +136,7 @@ class _MyLoginState extends State<MyLogin> {
                               },
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text('LOG IN'),
