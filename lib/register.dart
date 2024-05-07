@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:oms/components/toast.dart';
 import 'package:oms/firebase_auth_implementation/firebase_auth_services.dart';
 
 class myRegister extends StatefulWidget {
@@ -18,6 +19,7 @@ class _myRegisterState extends State<myRegister> {
   TextEditingController _passwordController = TextEditingController();
   
   //ket noi toi dich vu firebae
+  bool _isSignUp = false;
   FirebaseAuthService _auth = new FirebaseAuthService();
 
   void dispose() {
@@ -38,17 +40,21 @@ class _myRegisterState extends State<myRegister> {
 
   //xu ly su kien dang ky
   void _signUp(BuildContext context) async{
+    setState(() {
+      _isSignUp = true;
+    });
       String userName = _usernameController.text;
       String emailName = _emailController.text;
       String phoneName = _phoneController.text;
       String passwordName = _passwordController.text;
 
       User? user = await _auth.signUpWithEmailAndPassword(emailName, passwordName);
+      setState(() {
+        _isSignUp = false;
+      });
       if(user != null){
-        print('Dang ky thanh cong');
+        showToast('Dang ky thanh cong');
         Navigator.pushNamed(context, 'home');
-      }else{
-        print('Dang ky that bai');
       }
   }
 
@@ -186,7 +192,7 @@ class _myRegisterState extends State<myRegister> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
+                                children:_isSignUp ? [CircularProgressIndicator(color: Colors.white)]:<Widget>[
                                   Text('REGISTER'),
                                   Icon(
                                     Icons.content_paste_rounded,
