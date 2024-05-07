@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Xử lý khi người dùng nhấn vào nút
+                 Navigator.pushNamed(context, 'searchScreen');
               },
               child: Text('Do something'),
             ),
