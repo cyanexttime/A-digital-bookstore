@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'firebase_auth_implementation/firebase_auth_services.dart';
 
 class IntroducePage extends StatefulWidget {
   const IntroducePage({Key? key}) : super(key: key);
@@ -11,10 +10,11 @@ class IntroducePage extends StatefulWidget {
 
 class _IntroducePageState extends State<IntroducePage>
 {
+  @override
   Widget build(BuildContext context){
     return SafeArea(
       child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage(
                 'assets/introduce_page.png',
@@ -26,12 +26,12 @@ class _IntroducePageState extends State<IntroducePage>
           (
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, 'login');
                 },
-                child: Text('Next'),
+                child: const Text('Next'),
               ),
             ],
           ),

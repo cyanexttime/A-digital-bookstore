@@ -11,14 +11,15 @@ class myRegister extends StatefulWidget {
 
 class _myRegisterState extends State<myRegister> {
   //
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   
   //ket noi toi dich vu firebae
-  FirebaseAuthService _auth = new FirebaseAuthService();
+  final FirebaseAuthService _auth = FirebaseAuthService();
 
+  @override
   void dispose() {
     _usernameController.dispose();
     _emailController.dispose();
@@ -55,7 +56,7 @@ class _myRegisterState extends State<myRegister> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
               'assets/login.png',
@@ -71,7 +72,7 @@ class _myRegisterState extends State<myRegister> {
                 onPressed: () {
                   Navigator.pushNamed(context, 'login');
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back_ios_rounded,
                   color: Colors.white,
                 ),
@@ -79,7 +80,7 @@ class _myRegisterState extends State<myRegister> {
           backgroundColor: Colors.transparent,
           body: Stack(
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -106,7 +107,7 @@ class _myRegisterState extends State<myRegister> {
                         decoration: InputDecoration(
                           labelText: 'Username',
                           fillColor: Colors.transparent,
-                          prefixIcon: Icon(Icons.people_outline),
+                          prefixIcon: const Icon(Icons.people_outline),
                           filled: true,
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -115,28 +116,28 @@ class _myRegisterState extends State<myRegister> {
                               )),
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
                           fillColor: Colors.transparent,
-                          prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: const Icon(Icons.email_outlined),
                           filled: true,
                           labelText: 'Email',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.white,
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       TextField(
                         controller: _phoneController,
                         decoration: InputDecoration(
                           fillColor: Colors.transparent,
-                          prefixIcon: Icon(Icons.phone),
+                          prefixIcon: const Icon(Icons.phone),
                           filled: true,
                           labelText: 'Phone',
                           border: OutlineInputBorder(
@@ -147,18 +148,18 @@ class _myRegisterState extends State<myRegister> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       TextField(
                         controller: _passwordController,
                         obscureText: _isHidden,
                         decoration: InputDecoration(
                           fillColor: Colors.transparent,
-                          prefixIcon: Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
                             onPressed: _toggleVisibility,
                             icon: _isHidden
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off),
+                                ? const Icon(Icons.visibility)
+                                : const Icon(Icons.visibility_off),
                           ),
                           filled: true,
                           labelText: 'Password',
@@ -170,7 +171,7 @@ class _myRegisterState extends State<myRegister> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -184,7 +185,7 @@ class _myRegisterState extends State<myRegister> {
                               onPressed: () {
                                 _signUp(context);
                               },
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,7 +199,7 @@ class _myRegisterState extends State<myRegister> {
                               )),
                         ],
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -206,7 +207,7 @@ class _myRegisterState extends State<myRegister> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'login');
                             },
-                            child: Text(
+                            child: const Text(
                               'Login',
                               style: TextStyle(color: Colors.black),
                             ),
@@ -215,7 +216,7 @@ class _myRegisterState extends State<myRegister> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'forgot');
                             },
-                            child: Text(
+                            child: const Text(
                               'Forgot password?',
                               style: TextStyle(color: Colors.black),
                             ),

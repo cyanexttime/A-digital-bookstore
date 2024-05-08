@@ -10,7 +10,7 @@ class resetPassword extends StatefulWidget {
 
 class _resetPasswordState extends State<resetPassword> {
 
-  TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
 
   void _sendNewPassword(BuildContext context) async{
       String newPassword = _newPasswordController.text;
@@ -21,7 +21,7 @@ class _resetPasswordState extends State<resetPassword> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
               'assets/login.png',
@@ -37,10 +37,10 @@ class _resetPasswordState extends State<resetPassword> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       top: 60.0,
                     ),
-                    child: Text(
+                    child: const Text(
                       'RESET \n NOW',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -65,7 +65,7 @@ class _resetPasswordState extends State<resetPassword> {
                         obscureText: false,
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: const Icon(Icons.email_outlined),
                           fillColor: Colors.grey.shade100,
                           filled: true,
                           // hintText: 'Password',
@@ -74,21 +74,21 @@ class _resetPasswordState extends State<resetPassword> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                maximumSize: Size(170.0, 90.0),
-                                minimumSize: Size(170.0, 60.0),
+                                maximumSize: const Size(170.0, 90.0),
+                                minimumSize: const Size(170.0, 60.0),
                                 backgroundColor: Colors.black,
-                                shape: StadiumBorder(),
+                                shape: const StadiumBorder(),
                               ),
                               onPressed: () {
                                 _sendNewPassword(context);
                               },
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,7 +102,7 @@ class _resetPasswordState extends State<resetPassword> {
                               )),
                         ],
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -110,7 +110,7 @@ class _resetPasswordState extends State<resetPassword> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'register');
                             },
-                            child: Text(
+                            child: const Text(
                               'Register',
                               style: TextStyle(color: Colors.black),
                             ),
@@ -119,7 +119,7 @@ class _resetPasswordState extends State<resetPassword> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'login');
                             },
-                            child: Text(
+                            child: const Text(
                               'LOGIN',
                               style: TextStyle(color: Colors.black),
                             ),
