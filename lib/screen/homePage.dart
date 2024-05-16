@@ -6,7 +6,6 @@ import 'package:oms/models/manga.dart';
 
 import 'package:oms/screen/manga_screen.dart';
 import '/screen/library_screen.dart';
-import '/screen/search_screen.dart';
 import '/screen/settings_screen.dart';
 import '/screen/notification_screen.dart';
 

@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:oms/chapter.dart';
+import 'package:oms/chapter_content.dart';
 import 'package:oms/homePage.dart';
 import 'package:oms/screen/homePage.dart';
 import 'package:oms/screen/introducePage.dart';
@@ -19,7 +21,7 @@ WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'introducePage',
+      initialRoute: 'searchScreen',
       title: 'OMS',
       routes: {
         'login': (context) => MyLogin(),
@@ -28,6 +30,8 @@ WidgetsFlutterBinding.ensureInitialized();
         'home': (context) => const HomeScreen(),
         'introducePage': (context) => IntroducePage(),
         'searchScreen':(context) => SearchScreen(),
+        'chapterContent': (context) => ChapterContent(),
+        'chapter': (context) => Chapter(),
       },
     ),
   );

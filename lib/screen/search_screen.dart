@@ -1,11 +1,10 @@
 // TODO Implement this library.
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:oms/apis/get_animes_by_search_api.dart';
-import 'package:oms/configs/app_configs.dart';
+import 'package:oms/API/get_mangas_by_search_api.dart';
+
 
 String query = '';
 List dataList = [];
@@ -18,7 +17,7 @@ class SearchScreen extends StatefulWidget {
 class _Search extends State<SearchScreen>  {
   //chờ dữ liệu trả về từ api
  Future<void> loadAnimes(String value) async {
-  final data = await getAnimesBySearchApi(query: '$value');
+  final data = await getMangasBySearchApi(query: '$value');
   setState(() {
     dataList = data;
   });
@@ -68,14 +67,16 @@ class _Search extends State<SearchScreen>  {
             child: ListView.builder(
               itemCount: dataList.length,
               itemBuilder: (context, index) {
-              final movie = dataList[index]['node'];
-              print("\n");
-              print(movie);
+              final movie = dataList[index];
+              final title = movie['attributes']['title']['en'];
+              if (title == null || title.isEmpty) {
+                  print('Title is null or empty');
+                } else {
+                  print(title);
+                } 
               return ListTile(
-                leading: Image.network(movie['main_picture']['large']),
-                title: Text(movie['title']),
-                subtitle: Text('ID: ${movie['id']}'),
-                );
+                    title: Text(title),
+                  );
               },
             ),
           )
