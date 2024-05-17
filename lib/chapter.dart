@@ -22,14 +22,19 @@ class _ChapterState extends State<Chapter> {
   Future<void> LoadChapterList(String value) async {
   final data = await GetChapterList(query: '$value');
   print(data);
-  setState(() {
-    dataList = data;
-        if (dataList.isEmpty) {
-      print('dataList is empty');
-    } else {
-      print('dataList is not empty');
+  if(mounted)
+  {
+    setState(() {
+      dataList = data;
+      if (dataList.isEmpty) {
+        print('dataList is empty');
+      } else {
+        print('dataList is not empty');
+      }
     }
-  });
+    );
+  }
+
 }
 
   @override
