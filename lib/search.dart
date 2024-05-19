@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
 
 
@@ -23,6 +24,21 @@ class _Search extends State<SearchScreen>  {
   });
 }
 
+  String? getCoverID(List<dynamic> relationships) {
+    for (var relationship in relationships) {
+      if (relationship['type'] == 'cover_art') {
+        return relationship['id'];
+      }
+    }
+    return null;
+  }
+
+  Future<String?> GetImage({required final query}) async {
+    final imageData = await GetFileNameImage(query: query);
+    if (imageData.isNotEmpty) {
+      return imageData['data']['attributes']['fileName'];
+    }
+  }
 
   @override
   Widget build (BuildContext context)
@@ -42,7 +58,7 @@ class _Search extends State<SearchScreen>  {
         elevation: 0.0,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+        padding: EdgeInsets.fromLTRB(0, 20, 10, 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,15 +84,55 @@ class _Search extends State<SearchScreen>  {
               itemCount: dataList.length,
               itemBuilder: (context, index) {
               // final movie = dataList[index]['data'];
-              final movie = dataList[index];
-              final title = movie['attributes']['title']['en'];
-              final status = movie['attributes']['status'];
-              return ListTile(
-                title: Text(title ?? 'No title'),
-                trailing: Text(status),
-                onTap: () {
-                      Navigator.pushNamed(context, 'chapter', arguments: movie['id']);
-                  },
+              final manga = dataList[index];
+              final coverID = getCoverID(manga['relationships']);
+              final fileName = GetImage(query: coverID); 
+              final ID = manga['id'];
+              final title = manga['attributes']['title']['en'];
+              final status = manga['attributes']['status'];
+              return FutureBuilder<String?>(
+              future: GetImage(query: coverID),
+              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return (
+                    Center(
+                      child: CircularProgressIndicator()
+                    )
+                  ); // or some other widget while waiting
+                } else {
+                  if (snapshot.hasError)
+                    return Text('Error: ${snapshot.error}');
+                  else
+                    return Column(
+                      children:<Widget>[
+                        ListTile(
+                      leading:Container(
+                        width: 60,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage('https://uploads.mangadex.org/covers/$ID/${snapshot.data}'),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        title ?? 'No title',
+                        style: TextStyle(
+                          fontSize: 13, // Set your desired font size
+                        ),
+                      ),
+                      trailing: Text(status),
+                      onTap: () {
+                        Navigator.pushNamed(context, 'chapter', arguments: manga['id']);
+                      },
+                      ),
+                      SizedBox(height: 15),
+                      ],
+                    );   // use snapshot.data as the filename
+                  }
+                },
                 );
               },
             ),
