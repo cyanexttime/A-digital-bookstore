@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:oms/API/authencation.dart';
+import 'package:oms/components/api_variables.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 
 class RegisterFormDialog extends StatefulWidget {
   @override
@@ -8,10 +12,30 @@ class RegisterFormDialog extends StatefulWidget {
 }
 
 class _RegisterFormDialogState extends State<RegisterFormDialog> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _clientIdController = TextEditingController();
   final TextEditingController _secretIdController = TextEditingController();
+  
+  Future<void> IsEmptyAccount(String username, String password, String clientId, String secretId) async {
+    if (username.isEmpty || password.isEmpty || clientId.isEmpty || secretId.isEmpty) {
+      print('Please fill all fields');
+      return;
+    } 
+    String? response = await getResfreshingToken(username, password, clientId, secretId);
+    if(response != null){
+      ApiVariables apiVariables = ApiVariables(
+        username: username,
+        password: password,
+        clientId: clientId,
+        secretId: secretId,
+        refreshToken: response,
+      );
+      FetchDataToFireStore(apiVariables: apiVariables);
+    } else {
+      print('Register failed');
+    }
+  }
 
   Widget Decrepsion() {
     return RichText(
@@ -59,8 +83,8 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
             Decrepsion(),
             SizedBox(height: 20),
             TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
             ),
             TextField(
               controller: _passwordController,
@@ -74,7 +98,6 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
             TextField(
               controller: _secretIdController,
               decoration: InputDecoration(labelText: 'Secret ID'),
-              obscureText: true,
             ),
             SizedBox(height: 20),
             Row(
@@ -90,15 +113,15 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
                 ElevatedButton(
                   onPressed: () {
                     // Handle Register action
-                    String email = _emailController.text;
+                    String username = _usernameController.text;
                     String password = _passwordController.text;
                     String clientId = _clientIdController.text;
                     String secretId = _secretIdController.text;
                     // Implement registration logic here
-
+                    IsEmptyAccount(username, password, clientId, secretId);
                     Navigator.of(context).pop();
                   },
-                  child: Text('Register'),
+                  child: Text('Register') ,
                 ),
               ],
             ),
@@ -107,4 +130,18 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
       ),
     );
   }
+}
+
+void FetchDataToFireStore({required ApiVariables apiVariables}) {
+  CollectionReference account = FirebaseFirestore.instance.collection('mangadex_account');
+  account 
+  .doc(apiVariables.username)
+  .set(
+    {
+      'password': apiVariables.password,
+      'clientId': apiVariables.clientId,
+      'secretId': apiVariables.secretId,
+    })
+  .then((value) => print('Account added'))
+  .catchError((error) => print('Failed to add account: $error'));
 }

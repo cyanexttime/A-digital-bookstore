@@ -8,14 +8,12 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:oms/screen/resetpass.dart';
 
 
 Map<String,dynamic> data = {};
-Future<String?> GetResfreshingToken() async {
-  final String username = "<your_username>";
-  final String password = "<your_password>";
-  final String clientId = "<your_client_id>";
-  final String clientSecret = "<your_client_secret>";
+Future<String?> getResfreshingToken(String username, String password, String clientId, String secretId
+) async {
     
   Map<String, String> headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -23,10 +21,10 @@ Future<String?> GetResfreshingToken() async {
 
   Map<String, String> creds = {
     "grant_type": "password",
-    "username": "Thanh8806",
-    "password": "thanh080804@gmail.com",
-    "client_id": "personal-client-b899bbf6-0f42-4136-96a2-74fbeb8d9176-dd343205",
-    "client_secret": "R4Lopt85Qgv7keEEGLMdK7dRCCW5kCCH",
+    "username": username,
+    "password": password,
+    "client_id": clientId,
+    "client_secret": secretId,
   };
   final response = await http.post(
     Uri.parse("https://auth.mangadex.org/realms/mangadex/protocol/openid-connect/token"),

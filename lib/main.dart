@@ -23,7 +23,7 @@ WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'signUpMagadex',
+      initialRoute: 'signInMagadex',
       title: 'OMS',
       routes: {
         'login': (context) => MyLogin(),

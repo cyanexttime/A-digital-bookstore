@@ -166,27 +166,27 @@ Widget buildImage() {
   }
 }
 
-  void FollowManga() {
-    PostMangaToMangaList( query: mangaID).then((value) {
-      if (value == '200') {
-        print('Added to library');
-      } else {
-        print('Failed to add to library');
-      }
-    });
-  }
+  // void FollowManga() {
+  //   PostMangaToMangaList( query: mangaID).then((value) {
+  //     if (value == '200') {
+  //       print('Added to library');
+  //     } else {
+  //       print('Failed to add to library');
+  //     }
+  //   });
+  // }
 
-  void UnFollowMange(){
-    DeleteMangaInMangaList(query: mangaID).then((value) {
-      if(value == '200'){
-        print('Delete thanh cong');
-      }
-      else
-      {
-        print('Fail');
-      }
-    });
-  }
+  // void UnFollowMange(){
+  //   DeleteMangaInMangaList(query: mangaID).then((value) {
+  //     if(value == '200'){
+  //       print('Delete thanh cong');
+  //     }
+  //     else
+  //     {
+  //       print('Fail');
+  //     }
+  //   });
+  // }
 
 Widget ShowVolumes(){
   if(dataVolumesAndChapters.isEmpty)
@@ -257,11 +257,11 @@ Widget ShowVolumes(){
               onPressed: () {
                 if(isPressed == false)
                 {
-                  FollowManga();
+                  //FollowManga();
                   isPressed = true;
                 }
                 else{
-                  UnFollowMange();
+                  //UnFollowMange();
                   isPressed = false;
                 }
                 ScaffoldMessenger.of(context).showSnackBar(

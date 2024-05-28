@@ -8,18 +8,16 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:oms/components/api_variables.dart';
 
 
 Map<String,dynamic> data = {};
-Future<String?> GetToken({
-  required String query,
-}) async {
-
+Future<String?> GetToken() async {
   final creds = {
       "grant_type": "refresh_token",
-      "refresh_token": query,
-      "client_id": "personal-client-b899bbf6-0f42-4136-96a2-74fbeb8d9176-dd343205",
-      "client_secret": "R4Lopt85Qgv7keEEGLMdK7dRCCW5kCCH",
+      "refresh_token": apiVariables.refreshToken,
+      "client_id": apiVariables.clientId,
+      "client_secret": apiVariables.secretId,
     };
 
    final response = await http.post(
