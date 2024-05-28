@@ -11,21 +11,19 @@ import 'package:http/http.dart';
 
 
 
-Future<List<dynamic>> GetChapterList({
+Future<Map<String,dynamic>> GetChapterList({
   required String query,
 }) async {
 
   final String baseUrl = "https://api.mangadex.org/manga";
-  print(query);
-  List<dynamic> data = [];
+  Map<String,dynamic> data = {};
   try{
     final response = await http.get(
-    Uri.parse('$baseUrl/$query/feed')
+    Uri.parse('$baseUrl/$query/aggregate')
   );
-  print('$baseUrl/$query/feed');
   if (response.statusCode == 200) {
-      data = json.decode(response.body)['data'];
-      print(data);
+      var datajson= json.decode(response.body);
+      data = datajson != null ? datajson : {};
       // một danh sách các node anime trong khóa data của api
       return data;
     } 
@@ -40,7 +38,7 @@ Future<List<dynamic>> GetChapterList({
     }
   }
   // Add a return statement here
-  return []; 
+  return {}; 
 }
 
 

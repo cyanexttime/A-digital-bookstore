@@ -12,7 +12,7 @@ Future<List<dynamic>> getMangasBySearchApi({
   final String baseUrl = "https://api.mangadex.org";
   final response = await http.get(
     Uri.parse('$baseUrl/manga?title=$query')
-  );
+  ).timeout(const Duration(seconds: 5));
   List<dynamic> data = [];
   if (response.statusCode == 200) {
     data = json.decode(response.body)['data'];

@@ -16,7 +16,6 @@ Future<Map<String,dynamic>> GetChapterContent({
   final String baseUrl = "https://api.mangadex.org/at-home/server";
   final response = await http.get(
     Uri.parse('$baseUrl/$query')
-    
   );
   print('$baseUrl/$query/feed');
   Map<String,dynamic> data = {};
@@ -24,7 +23,6 @@ Future<Map<String,dynamic>> GetChapterContent({
     var jsonData = json.decode(response.body);
     data = jsonData != null ? jsonData : {};
     // một danh sách các node anime trong khóa data của api
-    print(data);
     return data;
   } 
   else{

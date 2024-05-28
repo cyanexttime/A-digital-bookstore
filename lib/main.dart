@@ -9,6 +9,8 @@ import 'package:oms/screen/login.dart';
 import 'package:oms/screen/register.dart';
 import 'package:oms/screen/resetpass.dart';
 import 'package:oms/search.dart';
+import 'package:oms/sign_in_magadex.dart';
+import 'package:oms/sign_up_mangadex.dart';
 import 'firebase_options.dart';
 
 
@@ -21,7 +23,7 @@ WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'searchScreen',
+      initialRoute: 'signUpMagadex',
       title: 'OMS',
       routes: {
         'login': (context) => MyLogin(),
@@ -32,6 +34,8 @@ WidgetsFlutterBinding.ensureInitialized();
         'searchScreen':(context) => SearchScreen(),
         'chapterContent': (context) => ChapterContent(),
         'chapter': (context) => Chapter(),
+        'signInMagadex': (context) => LoginFormDialog(),
+        'signUpMagadex': (context) => RegisterFormDialog(),
       },
     ),
   );
