@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,13 +8,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:oms/API/follow_manga.dart';
+import 'package:oms/API/get_a_manga_reading_status.dart';
 import 'package:oms/API/get_author.dart';
 import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/API/get_chapter_list.dart';
 import 'package:oms/API/unfollow_manga.dart';
+import 'package:oms/API/update_manga_reading_status.dart';
+import 'package:oms/message_box_screen.dart';
 import 'package:oms/models/manga.dart';
 import 'package:transparent_image/transparent_image.dart';
+
+
 
 class Chapter extends StatefulWidget {
   const Chapter({Key? key}) : super(key: key);
@@ -27,6 +31,7 @@ Map<String,dynamic> dataList = {};
 Map<String,dynamic> dataManga = {};
 Map<String,dynamic> dataVolumesAndChapters = {};
 
+String currentStatus = '';
 String title = '';
 String idAuthor = '';
 String japanese = ''; //teen goi theo tieng nhat cua truyen 
@@ -37,6 +42,7 @@ String mangaID = '';
 String description = '';
 String selectedCategory = '';
 bool isPressed = false;
+
 
 class _ChapterState extends State<Chapter> {
  @override
@@ -62,8 +68,26 @@ class _ChapterState extends State<Chapter> {
       LoadMangaInfo(mangaID),
       LoadChapterList(mangaID),
       LoadVolumesAndChapters(mangaID),
-      
+      LoadReadingStatus(mangaID), 
     ]);
+  }
+
+    Map<String,String>  changeTemp={
+      "on_hold":"On Hold",
+      "reading":"Reading",
+      "dropped":"Dropped",
+      "plan_to_read":"Plan to Read",
+      "completed":"Completed",
+      "re_reading":"Re-reading",
+    };
+  Future<void> LoadReadingStatus(String value) async {
+    final statusdata = await GetAMangaReadingStatus(query: '$value');
+    if (statusdata != null) {
+      currentStatus = statusdata.toString();
+      currentStatus = changeTemp[currentStatus]!;
+    } else {
+      currentStatus = 'None';
+    }
   }
   Future<void> LoadAuthor(String value) async {
   if (value == null || value.trim().isEmpty) {
@@ -106,9 +130,9 @@ class _ChapterState extends State<Chapter> {
     if(mounted)
     {
       setState(() {
-        dataList = data;
-        if (dataList.isEmpty) {
-          //print('dataList is empty');
+        
+        if (dataList.isNotEmpty) {
+          dataList = data;
         } else {
           //print('dataList is not empty');
         }
@@ -166,69 +190,70 @@ Widget buildImage() {
   }
 }
 
-  // void FollowManga() {
-  //   PostMangaToMangaList( query: mangaID).then((value) {
-  //     if (value == '200') {
-  //       print('Added to library');
-  //     } else {
-  //       print('Failed to add to library');
-  //     }
-  //   });
-  // }
+  void FollowManga() {
+    PostMangaToMangaList( query: mangaID).then((value) {
+      if (value == '200') {
+        print('Added to library');
+      } else {
+        print('Failed to add to library');
+      }
+    });
+  }
 
-  // void UnFollowMange(){
-  //   DeleteMangaInMangaList(query: mangaID).then((value) {
-  //     if(value == '200'){
-  //       print('Delete thanh cong');
-  //     }
-  //     else
-  //     {
-  //       print('Fail');
-  //     }
-  //   });
-  // }
+  void UnFollowMange(){
+    DeleteMangaInMangaList(query: mangaID).then((value) {
+      if(value == '200'){
+        print('Delete thanh cong');
+      }
+      else
+      {
+        print('Fail');
+      }
+    });
+  }
 
-Widget ShowVolumes(){
-  if(dataVolumesAndChapters.isEmpty)
-  {
+Widget ShowVolumes() {
+  if (dataVolumesAndChapters == null || dataVolumesAndChapters['volumes'] == null) {
     return CircularProgressIndicator();
   }
-  int count = dataVolumesAndChapters['volumes'].length;
-  Map volumes = dataVolumesAndChapters['volumes'];
-  print(count);
+
+  int countVolume = dataVolumesAndChapters['volumes'].length;
+  Map<dynamic, dynamic> volumes = dataVolumesAndChapters['volumes'] ?? {};
+
   return ListView.builder(
     shrinkWrap: true,
     physics: NeverScrollableScrollPhysics(),
-    itemCount: count,
-    itemBuilder: (_,index){
-      final itemKey = volumes.keys.elementAt(index);
-      int countChapter = dataVolumesAndChapters['volumes'][itemKey]['chapters'].length;
-      Map item = dataVolumesAndChapters['volumes'][itemKey]['chapters'];
+    itemCount: countVolume,
+    itemBuilder: (_, indexVolume) {
+      final itemKey = volumes.keys.elementAt(indexVolume);
+      int countChapter = dataVolumesAndChapters['volumes'][itemKey]['chapters']?.length ?? 0;
+      Map<dynamic, dynamic> item = dataVolumesAndChapters['volumes'][itemKey]['chapters'] ?? {};
+
       return Card(
-        elevation: 4,
-          child: ExpansionTile(
-            title: Text('Volume $itemKey'),
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: countChapter,
-                itemBuilder: (_,index){
-                  final chapterkey = item.keys.elementAt(index);
-                  final chapter = item[chapterkey];
-                  return ListTile(
-                    title: Text(chapter['chapter']??'No title'),
-                    //subtitle: Text('Chapter: ${chapter['attributes']['chapter']??'No chapter'}'),
-                    onTap: (){
-                      Navigator.pushNamed(context, 'chapterContent', arguments: chapter['id']);
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
+        elevation: 12,
+        child: ExpansionTile(
+          title: Text('Volume $itemKey'),
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: countChapter,
+              itemBuilder: (_, index) {
+                final chapterkey = item.keys.elementAt(index);
+                final chapter = item[chapterkey] ?? {};
+                return ListTile(
+                  title: Text(chapter['chapter'] ?? 'No title'),
+                  subtitle: Text('Chapter: ${chapter['attributes']?['chapter'] ?? 'No chapter'}'),
+                  onTap: () {
+                    Navigator.pushNamed(context, 'chapterContent', arguments: chapter['id']);
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       );
-    }
+    },
   );
 }
   Widget buildMangaInfo() {
@@ -255,24 +280,25 @@ Widget ShowVolumes(){
           children: [
             ElevatedButton(
               onPressed: () {
-                if(isPressed == false)
-                {
-                  //FollowManga();
-                  isPressed = true;
-                }
-                else{
-                  //UnFollowMange();
-                  isPressed = false;
-                }
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(isPressed ? 'Added to library' : 'Removed from library'),
-                    duration: Duration(seconds: 2),          
-                  ),
-                );
-                setState(() {
-                  isPressed != isPressed;
-                });
+                MessageBoxScreen().showMessageBox(context);
+                // if(isPressed == false)
+                // {
+                //   FollowManga();
+                //   isPressed = true;
+                // }
+                // else{
+                //   UnFollowMange();
+                //   isPressed = false;
+                // }
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(
+                //     content: Text(isPressed ? 'Added to library' : 'Removed from library'),
+                //     duration: Duration(seconds: 2),          
+                //   ),
+                // );
+                // setState(() {
+                //   isPressed != isPressed;
+                // });
               },
               child: Text(isPressed ? 'Remove from library' : 'Add to library'),
             ),
@@ -351,3 +377,4 @@ Widget ShowVolumes(){
     );
   }
 }
+

@@ -2,13 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:oms/chapter.dart';
 import 'package:oms/chapter_content.dart';
-import 'package:oms/homePage.dart';
+import 'package:oms/message_box_screen.dart';
 import 'package:oms/screen/homePage.dart';
 import 'package:oms/screen/introducePage.dart';
 import 'package:oms/screen/login.dart';
 import 'package:oms/screen/register.dart';
 import 'package:oms/screen/resetpass.dart';
-import 'package:oms/search.dart';
+import 'package:oms/screen/search.dart';
 import 'package:oms/sign_in_magadex.dart';
 import 'package:oms/sign_up_mangadex.dart';
 import 'firebase_options.dart';
@@ -23,19 +23,19 @@ WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'signInMagadex',
+      initialRoute: 'home',
       title: 'OMS',
       routes: {
         'login': (context) => MyLogin(),
         'register': (context) => myRegister(),
         'forgot': (context) => resetPassword(),
-        'home': (context) => const HomeScreen(),
+        'home': (context) => HomeScreen(),
         'introducePage': (context) => IntroducePage(),
-        'searchScreen':(context) => SearchScreen(),
+        'searchScreen':(context) => searchScreen(),
         'chapterContent': (context) => ChapterContent(),
         'chapter': (context) => Chapter(),
-        'signInMagadex': (context) => LoginFormDialog(),
-        'signUpMagadex': (context) => RegisterFormDialog(),
+        'signInMangadex': (context) => LoginFormDialog(),
+        'signUpMangadex': (context) => RegisterFormDialog(),
       },
     ),
   );

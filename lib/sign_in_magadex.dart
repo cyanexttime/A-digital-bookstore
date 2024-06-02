@@ -7,7 +7,8 @@ import 'package:oms/config/app_config.dart';
 
 class LoginFormDialog extends StatefulWidget {
   @override
-  _LoginFormDialogState createState() => _LoginFormDialogState();
+  const LoginFormDialog({Key? key}) : super(key: key);
+  State<LoginFormDialog> createState() =>  _LoginFormDialogState();
 }
 
 class _LoginFormDialogState extends State<LoginFormDialog> {
@@ -15,34 +16,61 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<void> CheckAccountMangadex(String user,String password) async {
-    if (user.isEmpty || password.isEmpty) {
-      print('Please fill all fields');
-      return;
-    } 
-    QuerySnapshot querySnapshot = await firestore.collection('mangadex_account').get();
-    for (var doc in querySnapshot.docs) {
-      if(doc.id == user && doc['password'] == password)
-        {
-          String clientId = doc['clientId'];
-          String secretID= doc['secretId'];
-          String? response = await getResfreshingToken(user, password, clientId, secretID);
-          if(response != null){
-            ApiVariables apiVariables = ApiVariables(
-              username: user,
-              password: password,
-              clientId: clientId,
-              secretId: secretID,
-              refreshToken: response,
-            );
-           }
+  // Future<void> CheckAccountMangadex(String user,String password) async {
+  //   if (user.isEmpty || password.isEmpty) {
+  //     print('Please fill all fields');
+  //     return;
+  //   } 
+  //   QuerySnapshot querySnapshot = await firestore.collection('mangadex_account').get();
+  //   for (var doc in querySnapshot.docs) {
+  //     if(doc.id == user && doc['password'] == password)
+  //       {
+  //         String clientId = doc['clientId'];
+  //         String secretID= doc['secretId'];
+  //         String? response = await getResfreshingToken(user, password, clientId, secretID);
+  //         if(response != null){
+  //           ApiVariables apiVariables = ApiVariables(
+  //             username: user,
+  //             password: password,
+  //             clientId: clientId,
+  //             secretId: secretID,
+  //             refreshToken: response,
+  //           );
+  //          }
 
+  //       }
+  //     else {
+  //       print('Login failed');
+  //     }
+  //   }
+  // }
+
+  // dung de xu ly tinh nang
+   Future<bool> CheckAccountMangadex(String user,String password) async {
+        user = 'Thanh8806';
+        password = 'thanh080804@gmail.com';
+        String clientId = 'personal-client-b899bbf6-0f42-4136-96a2-74fbeb8d9176-dd343205';
+        String secretID= 'R4Lopt85Qgv7keEEGLMdK7dRCCW5kCCH';
+        String? response = await getResfreshingToken(user, password, clientId, secretID);
+        if(response != null){
+          apiVariables.clientId = clientId;
+          apiVariables.secretId = secretID;
+          apiVariables.refreshToken = response;
+          apiVariables.username = user;
+          apiVariables.password = password;
+          apiVariables.isLogin = true;
+          if(apiVariables.refreshToken != null){
+            return true;
+          }
+          else{
+            return false;
+          }
+          }
+        else{
+          return false;
         }
-      else {
-        print('Login failed');
-      }
-    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -106,13 +134,36 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                   child: Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: ()async {
                     // Handle Login action
                     String username= _usernameController.text;
                     String password = _passwordController.text;
                     // Implement login logic here
-                    CheckAccountMangadex(username, password);
-                    Navigator.of(context).pop();
+                    bool check = await CheckAccountMangadex(username, password);
+                    if(check == true){
+                      Navigator.pop(context);
+                    }
+                    else{
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Login failed'),
+                            content: Text('Please check your username and password again'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  _usernameController.text = '';
+                                  _passwordController.text = '';
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                   child: Text('Login'),
                 ),

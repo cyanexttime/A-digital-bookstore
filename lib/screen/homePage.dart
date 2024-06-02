@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:oms/Constants/appColor.dart';
 import 'package:oms/Constants/constants.dart';
 import 'package:oms/models/manga.dart';
-
 import 'package:oms/screen/manga_screen.dart';
+import 'package:oms/screen/search.dart';
+
 import '/screen/library_screen.dart';
 import '/screen/settings_screen.dart';
 import '/screen/notification_screen.dart';
+
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.index});
@@ -32,14 +35,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final _destinations = [
     const NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
     const NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
-    const NavigationDestination(
-        icon: Icon(Icons.library_add), label: 'Library'),
-    const NavigationDestination(
-        icon: Icon(Icons.settings), label: 'Notifications'),
+    const NavigationDestination(icon: Icon(Icons.library_add), label: 'Library'),
+    const NavigationDestination(icon: Icon(Icons.settings), label: 'Notifications'),
     const NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
   ];
-  get _screens => const [
+  get _screens => [
         MangaScreen(),
+        searchScreen(),
+        LibraryScreen(),
       ];
 
   @override
@@ -50,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         body: _screens[_selectedIndex],
         bottomNavigationBar: NavigationBar(
-          elevation: 12,
+          elevation: 5,
           backgroundColor: AppColor.darkCyan,
           selectedIndex: _selectedIndex,
           destinations: _destinations,

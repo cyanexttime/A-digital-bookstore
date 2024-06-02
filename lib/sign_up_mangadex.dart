@@ -29,7 +29,8 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
         password: password,
         clientId: clientId,
         secretId: secretId,
-        refreshToken: response,
+        isLogin: true,
+        refreshToken: response, 
       );
       FetchDataToFireStore(apiVariables: apiVariables);
     } else {

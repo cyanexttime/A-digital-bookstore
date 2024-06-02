@@ -11,23 +11,23 @@ import 'package:http/http.dart';
 import 'package:oms/API/accessToken.dart';
 
 
-Future<String> DeleteMangaInMangaList( {
+Future<String?> GetAMangaReadingStatus( {
   required String query,
 }) async {
-  final String baseUrl = "https://api.mangadex.org";
+  final String baseUrl = "https://api.mangadex.org/manga";
   final String? sessionToken = await GetToken();
-  print(sessionToken);
-  final response = await http.delete(
-    Uri.parse("$baseUrl/manga/$query/follow"),
+  final response = await http.get(
+    Uri.parse("$baseUrl/$query/status"),
     headers: {
       "Authorization": "Bearer $sessionToken"
     },
   );
   if (response.statusCode == 200) {
-      return (response.statusCode).toString();
+      Map<String, dynamic> data = jsonDecode(response.body);
+      print(data["status"]);
+      return data["status"];
   }
   else {
-      print('Error: ${response.statusCode}');
       return (response.statusCode).toString();
   }
 }

@@ -15,12 +15,12 @@ import 'package:oms/API/get_mangas_by_search_api.dart';
 String query = '';
 List dataList = [];
 
-class SearchScreen extends StatefulWidget {
-  SearchScreen({Key? key}) : super(key: key);
-  State<SearchScreen> createState() => _Search();
+class searchScreen extends StatefulWidget {
+  searchScreen({Key? key}) : super(key: key);
+  State<searchScreen> createState() => _Search();
 }
 
-class _Search extends State<SearchScreen>  {
+class _Search extends State<searchScreen>  {
 
 
   void initState() {
@@ -178,7 +178,7 @@ class _Search extends State<SearchScreen>  {
       body: Padding(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: SingleChildScrollView(
-        child: Column(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -187,15 +187,15 @@ class _Search extends State<SearchScreen>  {
             child:SearchBar(),
           ),
           Container(
-            height: MediaQuery.of(context).size.height - 200, // 85 is the total height of other widgets
+            height: MediaQuery.of(context).size.height - 280, // 85 is the total height of other widgets
             child: SearchResults(),
           ),
           ],
 
         ),
+       ),
         )
-      )
-    );
+      );
   }
   
 }
