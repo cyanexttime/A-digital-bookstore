@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+ 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +6,21 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:oms/API/accessToken.dart';
 import 'package:oms/API/authencation.dart';
+import 'package:oms/API/get_all_reading_status.dart';
+import 'package:oms/API/get_author.dart';
 import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_list_apiclient.dart';
+import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
+import 'package:oms/chapter.dart';
 import 'package:oms/components/api_variables.dart';
+import 'package:oms/components/get_coverID.dart';
+import 'package:oms/components/get_image.dart';
 
 
 String query = '';
 List dataList = [];
+Map<String,dynamic> dataReadingStatus = {};
 
 class LibraryScreen extends StatefulWidget {
   LibraryScreen({Key? key}) : super(key: key);
@@ -28,8 +34,11 @@ class _LibraryScreenState extends State<LibraryScreen>  {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       CheckLogin();
+      dataReadingStatus = await GetALLMangaReadingStatus(query: 'All');
     });
   }
+
+  
 
   Future<void> CheckLogin() async {
     if(apiVariables.isLogin == false){
@@ -45,10 +54,142 @@ class _LibraryScreenState extends State<LibraryScreen>  {
     'Completed',
     'Dropped',
     'Plan to read',
-    'Re-Reading',
+    'Re Reading',
     'On Hold'
   ];
   String selectedValue = 'All';
+
+  Widget Results(String value){
+  if(apiVariables.isLogin != true)
+  {
+    return CircularProgressIndicator();
+  }
+   return FutureBuilder<dynamic>(
+    future: GetALLMangaReadingStatus(query:value),
+    builder: (context, snapshot) {
+       if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+       }
+       else{
+           
+           if(snapshot.data != null)
+           {
+            Map<String, dynamic> dataReadingStatus = snapshot.data;
+           Map<String, dynamic>? statuses = dataReadingStatus['statuses'];
+           if(statuses == null)
+           {
+             return Center(child: Text('No Manga', style: TextStyle(fontSize: 20)));
+           }
+            List<MapEntry<String, dynamic>> mangaEntries = statuses.entries.toList();
+            int countMangaId = dataReadingStatus['statuses'].length;  
+            print(dataReadingStatus);
+            print(countMangaId);
+            return ListView.builder(
+            addAutomaticKeepAlives: true,
+            itemCount: countMangaId,
+            itemBuilder: (context, index) {
+            final mangaEntry = mangaEntries.elementAt(index);
+            final mangaID = mangaEntry.key;
+            
+            return FutureBuilder<List<dynamic>>(
+              future:() async
+              {
+                Map<String,dynamic> mangaInfo = await GetMangaInfo( query: mangaID);
+                var coverID = await getCoverID(mangaInfo['data']['relationships']);
+                var getImageString = await GetImage(query: coverID);
+                var author = await mangaInfo['data']['relationships'][0]['id']??'';
+                var title = await mangaInfo['data']['attributes']['title']['en']??'';
+                var  description = mangaInfo['data']['attributes']['description']['en']??'';
+
+                return[mangaInfo, getImageString,title,description];
+              }(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  String imageUrl = 'https://uploads.mangadex.org/covers/$mangaID/${snapshot.data?[1]}';
+                  return Container(
+                    width: double.infinity,
+                    color: Colors.blueAccent,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 200,
+                                child: CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                ),
+                                
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data?[2],
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      snapshot.data?[3],
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Status: ${mangaEntry.value}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(context, 'chapter', arguments: mangaID);
+                                      },
+                                      child: Text('Read'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                                        ),
+                        ),
+                    ),
+                  ),
+                  );
+                }
+              }
+            // subtitle: Text(snapshot.data?[0] ?? 'Unknown'),
+          );
+        }
+      );
+       }
+        else{
+          return Text('No Manga Found');
+       }
+       }
+      
+    },
+   );
+  
+    }
+
+
 
   @override
   Widget build (BuildContext context)
@@ -91,10 +232,8 @@ class _LibraryScreenState extends State<LibraryScreen>  {
                   return DropdownMenuItem<String>(
                     child: Container(
                       margin: EdgeInsets.all(10),
-                      child: Text(
-                        value,
-                        style: TextStyle(
-                            fontSize: 20),
+                      child: Text(value,
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
                     value: value);
@@ -113,7 +252,7 @@ class _LibraryScreenState extends State<LibraryScreen>  {
             SizedBox(height: 10),
             Container(
             height: MediaQuery.of(context).size.height - 280, // 85 is the total height of other widgets
-            child: SearchResults(),
+            child: Results(selectedValue),
               ),
             ],
           ),
@@ -121,9 +260,4 @@ class _LibraryScreenState extends State<LibraryScreen>  {
      ),
       );
   }
-  
 }
-
-SearchResults() {
-}
-
