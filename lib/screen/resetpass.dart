@@ -74,7 +74,7 @@ class _resetPasswordState extends State<resetPassword> {
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(170.0, 90.0),
                                 minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: Colors.black,
+                                backgroundColor: Color(0xff80669d),
                                 shape: const StadiumBorder(),
                               ),
                               onPressed: () {
@@ -85,7 +85,10 @@ class _resetPasswordState extends State<resetPassword> {
                                     MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('RESET NOW'),
+                                  Text('RESET NOW',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),),
                                   Icon(
                                     Icons.refresh,
                                     color: Colors.white,

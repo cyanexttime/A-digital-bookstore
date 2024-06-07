@@ -106,7 +106,7 @@ class _MyLoginState extends State<MyLogin> {
                             return 'Password must be greater than 6 digits';
                           }
                         },
-                        obscureText: true,
+                        obscureText: _isHidden,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           fillColor: Colors.grey.shade100,
@@ -114,8 +114,8 @@ class _MyLoginState extends State<MyLogin> {
                           suffixIcon: IconButton(
                             onPressed: _toggleVisibility,
                             icon: _isHidden
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off),
+                                ? Icon(Icons.visibility_off)
+                                : Icon(Icons.visibility),
                           ),
                           filled: true,
                           // hintText: 'Password',
@@ -132,7 +132,7 @@ class _MyLoginState extends State<MyLogin> {
                               style: ElevatedButton.styleFrom(
                                 maximumSize: Size(170.0, 90.0),
                                 minimumSize: Size(170.0, 60.0),
-                                backgroundColor: Colors.black,
+                                backgroundColor: Color(0xff80669d),
                                 shape: StadiumBorder(),
                               ),
                               onPressed: (){
@@ -143,7 +143,11 @@ class _MyLoginState extends State<MyLogin> {
                                 MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('LOG IN'),
+                                  Text('LOG IN',
+                                  style:TextStyle(
+                                    color: Colors.white,
+                                  ) 
+                                  ),
                                   Icon(
                                     Icons.lock,
                                     color: Colors.white,

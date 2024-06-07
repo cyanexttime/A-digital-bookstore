@@ -176,7 +176,7 @@ class _myRegisterState extends State<myRegister> {
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(170.0, 90.0),
                                 minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: Colors.black,
+                                backgroundColor: Color(0xff80669d),
                                 shape: const StadiumBorder(),
                               ),
                               onPressed: () {
@@ -187,7 +187,11 @@ class _myRegisterState extends State<myRegister> {
                                     MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('REGISTER'),
+                                  Text('REGISTER',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
+                                  ),
                                   Icon(
                                     Icons.content_paste_rounded,
                                     color: Colors.white,

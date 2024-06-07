@@ -12,29 +12,30 @@ import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_list_apiclient.dart';
 import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
-import 'package:oms/chapter.dart';
+import 'package:oms/screen/chapter.dart';
 import 'package:oms/components/api_variables.dart';
 import 'package:oms/components/get_coverID.dart';
 import 'package:oms/components/get_image.dart';
+import 'package:provider/provider.dart'; // Add this line to import the 'Provider' class
 
 
 String query = '';
 List dataList = [];
 Map<String,dynamic> dataReadingStatus = {};
+ final Map<String, Future<List<dynamic>>> _futures = {};
 
 class LibraryScreen extends StatefulWidget {
   LibraryScreen({Key? key}) : super(key: key);
   State<LibraryScreen> createState() => _LibraryScreenState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen>  {
+class _LibraryScreenState extends State<LibraryScreen> {
   
-  
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       CheckLogin();
-      dataReadingStatus = await GetALLMangaReadingStatus(query: 'All');
     });
   }
 
@@ -45,7 +46,7 @@ class _LibraryScreenState extends State<LibraryScreen>  {
       Navigator.pushNamed(context, 'signInMangadex');
     }
     else{
-      
+      dataReadingStatus = await GetALLMangaReadingStatus(query: 'All');
     }
   }
   List<String> dropDownMenuItems = [
@@ -58,13 +59,15 @@ class _LibraryScreenState extends State<LibraryScreen>  {
     'On Hold'
   ];
   String selectedValue = 'All';
-
+  
   Widget Results(String value){
   if(apiVariables.isLogin != true)
   {
-    return CircularProgressIndicator();
+    print("here");
+    return Center(child:Text("Please Login Mangadex Account"));
   }
-   return FutureBuilder<dynamic>(
+  else{
+    return FutureBuilder<dynamic>(
     future: GetALLMangaReadingStatus(query:value),
     builder: (context, snapshot) {
        if (snapshot.connectionState == ConnectionState.waiting) {
@@ -91,91 +94,92 @@ class _LibraryScreenState extends State<LibraryScreen>  {
             final mangaEntry = mangaEntries.elementAt(index);
             final mangaID = mangaEntry.key;
             
-            return FutureBuilder<List<dynamic>>(
-              future:() async
-              {
-                Map<String,dynamic> mangaInfo = await GetMangaInfo( query: mangaID);
-                var coverID = await getCoverID(mangaInfo['data']['relationships']);
-                var getImageString = await GetImage(query: coverID);
-                var author = await mangaInfo['data']['relationships'][0]['id']??'';
-                var title = await mangaInfo['data']['attributes']['title']['en']??'';
-                var  description = mangaInfo['data']['attributes']['description']['en']??'';
+           if (!_futures.containsKey(mangaID)) {
+          _futures[mangaID] = () async {
+            Map<String, dynamic> mangaInfo = await GetMangaInfo(query: mangaID);
+            var coverID = await getCoverID(mangaInfo['data']['relationships']);
+            var getImageString = await GetImage(query: coverID);
+            var author = mangaInfo['data']['relationships'][0]['id'] ?? '';
+            var title = mangaInfo['data']['attributes']['title']['en'] ?? '';
+            var description = mangaInfo['data']['attributes']['description']['en'] ?? '';
 
-                return[mangaInfo, getImageString,title,description];
-              }(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  String imageUrl = 'https://uploads.mangadex.org/covers/$mangaID/${snapshot.data?[1]}';
-                  return Container(
-                    width: double.infinity,
-                    color: Colors.blueAccent,
+            return [mangaInfo, getImageString, title, description];
+              }();
+            }
+              return FutureBuilder<List<dynamic>>(
+          future: _futures[mangaID],
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              String imageUrl = 'https://uploads.mangadex.org/covers/$mangaID/${snapshot.data?[1]}';
+              return Container(
+                width: double.infinity,
+                color: Colors.blueAccent,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 100,
-                                height: 200,
-                                child: CachedNetworkImage(
-                                  imageUrl: imageUrl,
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 200,
+                            child: CachedNetworkImage(
+                              key: ValueKey(imageUrl),
+                              imageUrl: imageUrl,
+                              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshot.data?[2],
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                                
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snapshot.data?[2],
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      snapshot.data?[3],
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Status: ${mangaEntry.value}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(context, 'chapter', arguments: mangaID);
-                                      },
-                                      child: Text('Read'),
-                                    ),
-                                  ],
+                                SizedBox(height: 10),
+                                Text(
+                                  snapshot.data?[3],
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
-                                        ),
-                        ),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Status: ${mangaEntry.value}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, 'chapter', arguments: mangaID);
+                                  },
+                                  child: Text('Read'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  );
-                }
-              }
-            // subtitle: Text(snapshot.data?[0] ?? 'Unknown'),
-          );
+                ),
+              );
+            }
+          },
+              );
         }
       );
        }
@@ -186,6 +190,7 @@ class _LibraryScreenState extends State<LibraryScreen>  {
       
     },
    );
+  }
   
     }
 
@@ -251,7 +256,7 @@ class _LibraryScreenState extends State<LibraryScreen>  {
              ),
             SizedBox(height: 10),
             Container(
-            height: MediaQuery.of(context).size.height - 280, // 85 is the total height of other widgets
+            height: MediaQuery.of(context).size.height - 240, // 85 is the total height of other widgets
             child: Results(selectedValue),
               ),
             ],

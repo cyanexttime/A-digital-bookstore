@@ -11,7 +11,7 @@ import '/screen/settings_screen.dart';
 import '/screen/notification_screen.dart';
 
 
-
+final GlobalKey _bottomNavigationKey = GlobalKey();
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.index});
 
@@ -53,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         body: _screens[_selectedIndex],
         bottomNavigationBar: NavigationBar(
+          key: _bottomNavigationKey, 
           elevation: 5,
           backgroundColor: AppColor.darkCyan,
           selectedIndex: _selectedIndex,

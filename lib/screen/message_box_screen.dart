@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oms/API/update_manga_reading_status.dart';
-import 'package:oms/chapter.dart';
+import 'package:oms/screen/chapter.dart';
 
 class MessageBoxScreen {
   

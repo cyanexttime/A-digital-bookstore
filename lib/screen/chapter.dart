@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:oms/API/follow_manga.dart';
 import 'package:oms/API/get_a_manga_reading_status.dart';
 import 'package:oms/API/get_author.dart';
@@ -15,7 +16,8 @@ import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/API/get_chapter_list.dart';
 import 'package:oms/API/unfollow_manga.dart';
 import 'package:oms/API/update_manga_reading_status.dart';
-import 'package:oms/message_box_screen.dart';
+import 'package:oms/components/api_variables.dart';
+import 'package:oms/screen/message_box_screen.dart';
 import 'package:oms/models/manga.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -182,11 +184,11 @@ Widget buildImage() {
     print(imageUrl);
     return CachedNetworkImage(
       imageUrl: imageUrl,
-      placeholder: (context, url) => CircularProgressIndicator(),
+      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
       
     );
   } else {
-    return CircularProgressIndicator();
+    return Center(child: CircularProgressIndicator());
   }
 }
 
@@ -214,7 +216,7 @@ Widget buildImage() {
 
 Widget ShowVolumes() {
   if (dataVolumesAndChapters == null || dataVolumesAndChapters['volumes'] == null) {
-    return CircularProgressIndicator();
+    return Center(child: CircularProgressIndicator());
   }
 
   int countVolume = dataVolumesAndChapters['volumes'].length;
@@ -280,6 +282,7 @@ Widget ShowVolumes() {
           children: [
             ElevatedButton(
               onPressed: () {
+                if(apiVariables.isLogin){
                 MessageBoxScreen().showMessageBox(context);
                 // if(isPressed == false)
                 // {
@@ -299,12 +302,17 @@ Widget ShowVolumes() {
                 // setState(() {
                 //   isPressed != isPressed;
                 // });
+                }
+                else{
+                  Navigator.pushNamed(context,'signInMangadex');
+                }
               },
               child: Text(isPressed ? 'Remove from library' : 'Add to library'),
             ),
          ],
         ),
-        DropdownButton<String>(items: items.map((String value)
+       DropdownButton<String>(
+        items: items.map((String value)
         {
           hint:const Text('Remove from library');
           return DropdownMenuItem<String>(
@@ -319,15 +327,13 @@ Widget ShowVolumes() {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xffF1DCD1),
-      child:Scaffold(
+    return Scaffold(
+      backgroundColor: Color(0xFFF1DCD1),
         appBar:AppBar(
           title: Text('Chapters'),
           backgroundColor: Color(0xFF219F94),
         ),
         body:Container(
-          color: Color(0xffF1DCD1),
           padding: EdgeInsets.all(13),
           child:SingleChildScrollView(
              child: Column(
@@ -373,8 +379,7 @@ Widget ShowVolumes() {
             ),
           )
          )
-      ),
-    );
+      );
   }
 }
 
