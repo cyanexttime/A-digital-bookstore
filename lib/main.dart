@@ -24,7 +24,7 @@ WidgetsFlutterBinding.ensureInitialized();
   runApp(
       MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'introducePage',
+      initialRoute: 'home',
       title: 'OMS',
       routes: {
         'login': (context) => MyLogin(),

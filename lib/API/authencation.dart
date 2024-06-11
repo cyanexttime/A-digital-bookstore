@@ -37,7 +37,6 @@ Future<String?> getResfreshingToken(String username, String password, String cli
     final String accessToken = rJson["access_token"];
     final String refreshToken = rJson["refresh_token"];
     
-    print("Access Token: $accessToken");
     print("Refresh Token: $refreshToken");
     return refreshToken;
   } else {

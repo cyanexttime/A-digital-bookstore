@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,14 +6,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:oms/API/delete_manga_rating.dart';
 import 'package:oms/API/follow_manga.dart';
 import 'package:oms/API/get_a_manga_reading_status.dart';
 import 'package:oms/API/get_author.dart';
 import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/API/get_chapter_list.dart';
+import 'package:oms/API/get_manga_rating.dart';
+import 'package:oms/API/post_manga_rating.dart';
 import 'package:oms/API/unfollow_manga.dart';
-import 'package:oms/API/update_manga_reading_status.dart';
+import 'package:oms/API/post_manga_reading_status.dart';
+import 'package:oms/components/SignIn_SignUp_Magadex/sign_in_magadex.dart';
 import 'package:oms/components/api_variables.dart';
 import 'package:oms/screen/message_box_screen.dart';
 import 'package:oms/models/manga.dart';
@@ -44,9 +46,12 @@ String mangaID = '';
 String description = '';
 String selectedCategory = '';
 bool isPressed = false;
-
+Future<int>? _futureRating;
 
 class _ChapterState extends State<Chapter> {
+ 
+  final _evaluationOptions = ['0', '1', '2', '3', '4', '5', '6','7','8','9','10'];
+  String? ratingValue;
  @override
   void initState() {
     super.initState();
@@ -67,6 +72,8 @@ class _ChapterState extends State<Chapter> {
 
   Future<void> LoadData() async{
     await Future.wait([
+      //PostMangaRating(idmanga: mangaID, rating: 5),
+      _futureRating = GetMangaRating(query: mangaID),
       LoadMangaInfo(mangaID),
       LoadChapterList(mangaID),
       LoadVolumesAndChapters(mangaID),
@@ -277,53 +284,133 @@ Widget ShowVolumes() {
   {
     List<String> items = ['Add to library', 'Remove from library'];
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        ButtonBar(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                if(apiVariables.isLogin){
-                MessageBoxScreen().showMessageBox(context);
-                // if(isPressed == false)
-                // {
-                //   FollowManga();
-                //   isPressed = true;
-                // }
-                // else{
-                //   UnFollowMange();
-                //   isPressed = false;
-                // }
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   SnackBar(
-                //     content: Text(isPressed ? 'Added to library' : 'Removed from library'),
-                //     duration: Duration(seconds: 2),          
-                //   ),
-                // );
-                // setState(() {
-                //   isPressed != isPressed;
-                // });
-                }
-                else{
-                  Navigator.pushNamed(context,'signInMangadex');
-                }
-              },
-              child: Text(isPressed ? 'Remove from library' : 'Add to library'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
+                child: ElevatedButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  side: BorderSide(color: Colors.black, width: 2),
+                  ),
+                  onPressed: () {
+                    if(apiVariables.isLogin){
+                    MessageBoxScreen().showMessageBox(context);
+                    // if(isPressed == false)
+                    // {
+                    //   FollowManga();
+                    //   isPressed = true;
+                    // }
+                    // else{
+                    //   UnFollowMange();
+                    //   isPressed = false;
+                    // }
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text(isPressed ? 'Added to library' : 'Removed from library'),
+                    //     duration: Duration(seconds: 2),          
+                    //   ),
+                    // );
+                    // setState(() {
+                    //   isPressed != isPressed;
+                    // });
+                    }
+                    else{
+                      Navigator.pushNamed(context,'signInMangadex');
+                    }
+                  },
+                  child: Text(isPressed ? 'Remove from library' : 'Add to library'),
+              ),
             ),
-         ],
-        ),
-       DropdownButton<String>(
-        items: items.map((String value)
-        {
-          hint:const Text('Remove from library');
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(), onChanged: (String? value) {  },
-        )
-     ],
-    );
+            
+            Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Expanded(
+                child:Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      if(!apiVariables.isLogin){  
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginFormDialog (),
+                        )
+                      );
+                      }
+                    },
+                    child: AbsorbPointer(
+                      absorbing: !apiVariables.isLogin,
+                      child: FutureBuilder<int>(
+                          future:   _futureRating,
+                          builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return (Text('Loading...'));
+                              }
+
+                             else {
+                                ratingValue = snapshot.data?.toString();
+                                print(ratingValue);
+                                return DropdownButton<String>(
+                                value: ratingValue??'0',
+                                onChanged:apiVariables.isLogin? (value) {
+                                setState(() => ratingValue = value
+                              );
+                              if(ratingValue == null || ratingValue == '0')
+                              {
+                                print('Delete');
+                                DeleteMangaRating(idmanga: mangaID);
+                                
+
+                              }
+                              else{
+                                UpdateManagaRating(value);
+                              }
+                              setState(() {
+                                _futureRating = GetMangaRating(query: mangaID);
+                              });
+                            }:null,
+                          items:  _evaluationOptions.map(buildMenuItem).toList(),
+                          dropdownColor: Colors.white,
+                          style: TextStyle(color: Colors.black),
+                          iconEnabledColor: Colors.black,
+                          underline: Container(),
+                          iconSize: 36,
+                                              );
+                          }
+                        },
+                        ),
+                ),
+              ),
+              ),
+            )
+            )
+          ],  
+      );
   }
+
+
+  DropdownMenuItem<String> buildMenuItem(String item) => 
+    DropdownMenuItem(
+      value: item,
+      onTap: () {
+      },
+      child:Row(
+        children: [
+          Icon(Icons.star, color: Colors.amber),
+          SizedBox(width: 3),
+           Text(
+            item,
+            style: TextStyle(fontSize: 20),
+          )
+        ],)
+    );
 
   @override
   Widget build(BuildContext context) {
@@ -381,5 +468,15 @@ Widget ShowVolumes() {
          )
       );
   }
+}
+
+Future<void> UpdateManagaRating(String? value) async{
+  PostMangaRating(idmanga: mangaID, rating: int.parse(value!)).then((value) {
+    if (value == '200') {
+      print('Rating success');
+    } else {
+      print('Rating failed');
+    }
+  });
 }
 

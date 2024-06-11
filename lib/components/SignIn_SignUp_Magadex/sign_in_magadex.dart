@@ -173,7 +173,7 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                     // Implement login logic here
                     bool check = await CheckAccountMangadex(username, password);
                     if(check == true){
-                      Navigator.pop(context);
+                      Navigator.pop(context,true);
                     }
                     else{
                       showDialog(
