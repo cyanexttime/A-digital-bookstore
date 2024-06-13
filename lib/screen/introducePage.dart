@@ -16,6 +16,7 @@ class _IntroducePageState extends State<IntroducePage>
   Widget build(BuildContext context){
     return SafeArea(
       child: Container(
+        
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(

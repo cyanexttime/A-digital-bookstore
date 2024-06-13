@@ -51,7 +51,7 @@ Future<int>? _futureRating;
 class _ChapterState extends State<Chapter> {
  
   final _evaluationOptions = ['0', '1', '2', '3', '4', '5', '6','7','8','9','10'];
-  String? ratingValue;
+  String ratingValue = '0';
  @override
   void initState() {
     super.initState();
@@ -73,7 +73,7 @@ class _ChapterState extends State<Chapter> {
   Future<void> LoadData() async{
     await Future.wait([
       //PostMangaRating(idmanga: mangaID, rating: 5),
-      _futureRating = GetMangaRating(query: mangaID),
+      LoadMangaRating(mangaID),
       LoadMangaInfo(mangaID),
       LoadChapterList(mangaID),
       LoadVolumesAndChapters(mangaID),
@@ -98,6 +98,14 @@ class _ChapterState extends State<Chapter> {
       currentStatus = 'None';
     }
   }
+
+  Future<void> LoadMangaRating(String value) async {
+    final rating = await GetMangaRating(query: '$value');
+    setState(() {
+      ratingValue = rating?.toString() ?? '0';
+    });
+  }
+
   Future<void> LoadAuthor(String value) async {
   if (value == null || value.trim().isEmpty) {
     print('Invalid author ID');
@@ -280,6 +288,12 @@ Widget ShowVolumes() {
     );
   }
 
+  void _handleLoginChange() {
+    if (apiVariables.isLogin) {
+      LoadMangaRating(mangaID);
+    }
+  }
+
   Widget buildSnackBar(BuildContext context)
   {
     List<String> items = ['Add to library', 'Remove from library'];
@@ -336,63 +350,51 @@ Widget ShowVolumes() {
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if(!apiVariables.isLogin){  
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => LoginFormDialog (),
                         )
-                      );
+                      ).then(
+                          (value) => _handleLoginChange(),
+                        );
+                      
                       }
                     },
+
+
+
                     child: AbsorbPointer(
                       absorbing: !apiVariables.isLogin,
-                      child: FutureBuilder<int>(
-                          future:   _futureRating,
-                          builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return (Text('Loading...'));
-                              }
-
-                             else {
-                                ratingValue = snapshot.data?.toString();
-                                print(ratingValue);
-                                return DropdownButton<String>(
-                                value: ratingValue??'0',
-                                onChanged:apiVariables.isLogin? (value) {
-                                setState(() => ratingValue = value
-                              );
-                              if(ratingValue == null || ratingValue == '0')
-                              {
-                                print('Delete');
-                                DeleteMangaRating(idmanga: mangaID);
-                                
-
-                              }
-                              else{
-                                UpdateManagaRating(value);
-                              }
-                              setState(() {
-                                _futureRating = GetMangaRating(query: mangaID);
-                              });
-                            }:null,
-                          items:  _evaluationOptions.map(buildMenuItem).toList(),
+                      child: DropdownButton<String>(
+                        value: ratingValue,
+                        onChanged: (value) {
+                                setState(() => ratingValue = value!
+                        );
+                        if(value == null || value == '0')
+                        {
+                          print('Delete');
+                          DeleteMangaRating(idmanga: mangaID);
+                        }
+                        else{
+                          UpdateManagaRating(value);
+                        }
+                    },
+                      items:  _evaluationOptions.map(buildMenuItem).toList(),
                           dropdownColor: Colors.white,
                           style: TextStyle(color: Colors.black),
                           iconEnabledColor: Colors.black,
                           underline: Container(),
-                          iconSize: 36,
-                                              );
-                          }
-                        },
+                          iconSize: 36, 
+                      )
                         ),
                 ),
               ),
               ),
             )
-            )
-          ],  
-      );
+          ],
+        );
   }
 
 
@@ -469,6 +471,8 @@ Widget ShowVolumes() {
       );
   }
 }
+
+
 
 Future<void> UpdateManagaRating(String? value) async{
   PostMangaRating(idmanga: mangaID, rating: int.parse(value!)).then((value) {
