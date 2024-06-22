@@ -17,9 +17,8 @@ Future<Map<String,dynamic>> GetVolumeAndChapter({
   final String baseUrl = "https://api.mangadex.org/manga";
   try{
     final response = await http.get(
-      Uri.parse('$baseUrl/$query'),
+      Uri.parse('$baseUrl/$query/aggregate'),
     ).timeout(const Duration(seconds: 10));
-    print('$baseUrl/$query/aggregate');
     if (response.statusCode == 200) {
         data= json.decode(response.body);
         Map<String,dynamic> check = data != null ? data : {};

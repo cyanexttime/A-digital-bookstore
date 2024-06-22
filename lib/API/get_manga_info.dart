@@ -19,7 +19,6 @@ Future<Map<String,dynamic>> GetMangaInfo({
     final response = await http.get(
       Uri.parse('$baseUrl/$query'),
     );
-    print('$baseUrl/$query');
     if (response.statusCode == 200) {
         data= json.decode(response.body);
         Map<String,dynamic> check = data != null ? data : {};
