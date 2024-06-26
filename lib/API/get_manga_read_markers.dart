@@ -18,6 +18,7 @@ Future<List<dynamic>> GetMangaReadMarkers(
   
   if (response.statusCode == 200) {
     var decodedData = jsonDecode(response.body);
+    print(decodedData['data']);
     return decodedData['data'];
   } else {
     print('Error: ${response.statusCode}');

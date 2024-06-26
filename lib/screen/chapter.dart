@@ -16,6 +16,7 @@ import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/API/get_chapter_list.dart';
 import 'package:oms/API/get_manga_rating.dart';
 import 'package:oms/API/get_manga_read_markers.dart';
+import 'package:oms/API/get_statistics.dart';
 import 'package:oms/API/post_manga_rating.dart';
 import 'package:oms/API/post_manga_read_markers.dart';
 import 'package:oms/API/unfollow_manga.dart';
@@ -248,9 +249,8 @@ class _ChapterState extends State<Chapter> {
   }
 
   Widget ShowVolumes() {
-    if (dataVolumesAndChapters == null ||
-        dataVolumesAndChapters['volumes'] == null) {
-      return Center(child: CircularProgressIndicator());
+    if (dataVolumesAndChapters == null || dataVolumesAndChapters['volumes'] == null) {
+      return const Center(child: CircularProgressIndicator());
     }
 
     int countVolume = dataVolumesAndChapters['volumes'].length;
@@ -270,7 +270,7 @@ class _ChapterState extends State<Chapter> {
         return Card(
           elevation: 12,
           child: ExpansionTile(
-            title: Text('Volume $itemKey'),
+            title: Text('Volume ${itemKey ?? 0}'),
             children: [
               ListView.builder(
                 shrinkWrap: true,
@@ -279,11 +279,8 @@ class _ChapterState extends State<Chapter> {
                 itemBuilder: (_, index) {
                   final chapterkey = item.keys.elementAt(index);
                   final chapter = item[chapterkey] ?? {};
-
                   return ListTile(
-                    title: Text(chapter['chapter'] ?? 'No title'),
-                    subtitle: Text(
-                        'Chapter: ${chapter['attributes']?['chapter'] ?? 'No chapter'}'),
+                    title: Text('Chapter: ${chapter['chapter'] ?? 'No title'}'),
                     trailing: StatefulBuilder(builder: (context, setState) {
                       bool isBookmarked = CheckBookMarkers(chapter['id']);
 
@@ -347,13 +344,13 @@ class _ChapterState extends State<Chapter> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.black,
                 fontSize: 22,
                 fontWeight: FontWeight.bold)),
         Text(japanese, style: TextStyle(color: Colors.black, fontSize: 15)),
         Text(author,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 15,
             )),
@@ -382,88 +379,82 @@ class _ChapterState extends State<Chapter> {
       // width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        
         children: [
-               Expanded(
-                 child: ElevatedButton(
-                  
-                  onPressed: () {
-                  if (apiVariables.isLogin) {
-                    MessageBoxScreen().showMessageBox(context);
-                  } else {
-                    Navigator.pushNamed(context, 'signInMangadex');
-                  }
-                  },
-                        
-                  child: const Text('Add to library'),
-                  style: ElevatedButton.styleFrom( 
-                    foregroundColor: Color(0xFF219F94), 
-                    fixedSize: Size(150, 50),
-                    backgroundColor: Colors.white,
-                    shadowColor: Color(0xFF219F94),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    )
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                if (apiVariables.isLogin) {
+                  MessageBoxScreen().showMessageBox(context);
+                } else {
+                  Navigator.pushNamed(context, 'signInMangadex');
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Color(0xFF219F94),
+                  fixedSize: Size(150, 50),
+                  backgroundColor: Colors.white,
+                  shadowColor: Color(0xFF219F94),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-               ),
-               ),
-               SizedBox(width: 10),
-               Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 1),
-                  borderRadius: BorderRadius.circular(8),
-                  
-                ),
-                alignment: Alignment.centerLeft,
-                transformAlignment: Alignment.bottomRight,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: GestureDetector(
-                  onTap: () async {
-                    if (!apiVariables.isLogin) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginFormDialog(),
-                          )).then(
-                        (value) => _handleLoginChange(),
-                      );
-                    }
-                  },
-                  child: AbsorbPointer(
-                      absorbing: !apiVariables.isLogin,
-                      child: DropdownButton<String>(
-                        value: ratingValue,
-                        
-                        onChanged: (value) {
-                          setState(() => ratingValue = value!);
-                          if (value == null || value == '0') {
-                            print('Delete');
-                            DeleteMangaRating(idmanga: mangaID);
-                          } else {
-                            UpdateManagaRating(value);
-                          }
-                        },
-                        items: _evaluationOptions.map(buildMenuItem).toList(),
-                        dropdownColor: Colors.white,
-                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 30),
-                        iconEnabledColor: Colors.black,  
-                        underline: Container(),
-                        iconSize: 30,
-                      )
-                      
-                      ),
-                ),
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  )),
+              child: Text('Add to library'),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.centerLeft,
+              transformAlignment: Alignment.bottomRight,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: GestureDetector(
+                onTap: () async {
+                  if (!apiVariables.isLogin) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginFormDialog(),
+                        )).then(
+                      (value) => _handleLoginChange(),
+                    );
+                  }
+                },
+                child: AbsorbPointer(
+                    absorbing: !apiVariables.isLogin,
+                    child: DropdownButton<String>(
+                      value: ratingValue,
+                      onChanged: (value) {
+                        setState(() => ratingValue = value!);
+                        if (value == null || value == '0') {
+                          print('Delete');
+                          DeleteMangaRating(idmanga: mangaID);
+                        } else {
+                          UpdateManagaRating(value);
+                        }
+                      },
+                      items: _evaluationOptions.map(buildMenuItem).toList(),
+                      dropdownColor: Colors.white,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30),
+                      iconEnabledColor: Colors.black,
+                      underline: Container(),
+                      iconSize: 30,
+                    )),
               ),
             ),
-        ], 
+          ),
+        ],
       ),
     );
-
   }
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
@@ -522,18 +513,62 @@ class _ChapterState extends State<Chapter> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                  BuildStatistics(context),
+                  const SizedBox(height: 10),
                   buildSnackBar(context),
+                  const SizedBox(height: 10),
                   Text(description,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 15,
                       )),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   ShowVolumes(),
                 ],
               ),
             )));
+  }
+}
+
+class BuildStatistics extends StatelessWidget {
+  BuildStatistics(BuildContext context);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: GetStatistics(query: mangaID),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (snapshot.hasData) {
+          final data = snapshot.data;
+          if (data!.isEmpty) {
+            return Center(child: Text('No data'));
+          }
+          return Row(
+            children: [
+              Icon(Icons.star_border, color: Colors.amber),
+              SizedBox(width: 2),
+              Text('${data['rating']['average'].toStringAsFixed(2)}', style: const TextStyle(fontSize: 20)),
+              SizedBox(width: 8), // Khoảng cách giữa các phần tử
+              Icon(Icons.comment_bank_outlined, color: Colors.blue),
+              SizedBox(width: 2),
+              Text('${data['comments']?['repliesCount'] ?? 0 }', style: const TextStyle(fontSize: 20)),
+              SizedBox(width: 8),
+              Icon(Icons.people_alt_outlined, color: Colors.red),
+              SizedBox(width: 2),
+              Text('${data['follows'] ?? 0 }', style: const TextStyle(fontSize: 20)),
+            ],
+          );
+        }
+        return Center(child: Text('No data'));
+      },
+    );
   }
 }
 
