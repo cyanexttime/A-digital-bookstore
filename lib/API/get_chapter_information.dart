@@ -12,7 +12,7 @@ import 'package:http/http.dart';
 
 
 
-Future<List<dynamic>>GetChapterInformation({
+Future<List<dynamic>> GetChapterInformation ({
   required String chapterID,
 }) async {
   List data = [];
@@ -28,6 +28,7 @@ Future<List<dynamic>>GetChapterInformation({
         {
           data.add(data1['data']['attributes']['title']);
           data.add(data1['data']['attributes']['translatedLanguage']);
+          data.add(data1['data']['attributes']['chapter']);
           print(data);
           return data;
         }

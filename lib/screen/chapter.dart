@@ -122,8 +122,10 @@ class _ChapterState extends State<Chapter> {
       dataBookMarkers = data;
       bookmarkBloc.SetCount(data.length);
       for (var value in dataBookMarkers) {
+        List<dynamic> temp = await GetChapterInformation(chapterID: value);
         ItemModel item = ItemModel(
-          nameChapter: value.toString(), transLanguage: '',
+          nameChapter: '${temp[2] ?? 'No chapter'} - ${temp[0] ?? 'No title'}', 
+          transLanguage: temp[1] ?? 'No language',
           chapterID: value,
         );
         bookmarkBloc.AddItem(item);
@@ -341,7 +343,7 @@ class _ChapterState extends State<Chapter> {
                                     } else {
                                       ItemModel item = ItemModel(
                                         chapterID: chapter['id'],
-                                        nameChapter:'${chapter['chapter'] ?? ''}-${chapterBonus![0] ?? 'No title'}' ,
+                                        nameChapter:'${chapter['chapter'] ?? ''} - ${chapterBonus![0] ?? 'No title'}' ,
                                         transLanguage: '${chapterBonus![1] ?? 'No language'}'
                                       );
                                       if (isBookmarked) {
@@ -405,6 +407,7 @@ class _ChapterState extends State<Chapter> {
     if (apiVariables.isLogin) {
       LoadMangaRating(mangaID);
       LoadMangaReadMarkers(mangaID);
+      
     }
   }
 
@@ -430,7 +433,13 @@ class _ChapterState extends State<Chapter> {
                 if (apiVariables.isLogin) {
                   MessageBoxScreen().showMessageBox(context);
                 } else {
-                  Navigator.pushNamed(context, 'signInMangadex');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginFormDialog(),
+                        )).then(
+                      (value) => _handleLoginChange(),
+                    );
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -521,11 +530,11 @@ class _ChapterState extends State<Chapter> {
     return Scaffold(
         backgroundColor: Color(0xFFF1DCD1),
         appBar: AppBar(
-          title: Text('Chapters'),
+          title: const Text('Chapters'),
           actions: [
-            Text(bookmarkBloc.count.toString(), style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(bookmarkBloc.count.toString(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             IconButton(
-              icon: Icon(Icons.bookmark),
+              icon: const Icon(Icons.bookmark),
               style: ButtonStyle(
                 iconSize: MaterialStateProperty.all(30),
               ),
