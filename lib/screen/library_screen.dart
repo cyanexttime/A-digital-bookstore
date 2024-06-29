@@ -76,8 +76,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
               List<MapEntry<String, dynamic>> mangaEntries =
                   statuses.entries.toList();
               int countMangaId = dataReadingStatus['statuses'].length;
-              print(dataReadingStatus);
-              print(countMangaId);
               return ListView.builder(
                   addAutomaticKeepAlives: true,
                   itemCount: countMangaId,
@@ -107,9 +105,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     return FutureBuilder<List<dynamic>>(
                       future: _futures[mangaID],
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
@@ -131,11 +128,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                         child: CachedNetworkImage(
                                           key: ValueKey(imageUrl),
                                           imageUrl: imageUrl,
-                                          placeholder: (context, url) => Center(
-                                              child:
-                                                  CircularProgressIndicator()),
+                                          placeholder: (context, url) => const Center(
+                                              child:CircularProgressIndicator()),
                                           errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
+                                              const Icon(Icons.error),
                                         ),
                                       ),
                                       SizedBox(width: 10),

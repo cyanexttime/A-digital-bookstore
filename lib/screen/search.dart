@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:oms/API/accessToken.dart';
 import 'package:oms/API/authencation.dart';
@@ -11,29 +9,39 @@ import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_list_apiclient.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
 
-String query = '';
-List dataList = [];
-Map<String, String?> imageUrlMap = {};
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({Key? key}) : super(key: key);
 
-class searchScreen extends StatefulWidget {
-  searchScreen({Key? key}) : super(key: key);
-  State<searchScreen> createState() => _Search();
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _Search extends State<searchScreen> {
+class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClientMixin {
+  final ScrollController _scrollController = ScrollController();
+  List dataList = [];
+  Map<String, String?> imageUrlMap = {};
+  String query = '';
+
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      LoadData();
+      await loadData();
     });
   }
 
-  Future<void> LoadData() async {
-    final test = ListAPI();
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> loadData() async {
+    // Your implementation of ListAPI goes here.
   }
 
   Future<void> loadAnimes(String value) async {
-    final data = await getMangasBySearchApi(query: '$value');
+    final data = await getMangasBySearchApi(query: value);
     setState(() {
       dataList = data;
     });
@@ -48,7 +56,7 @@ class _Search extends State<searchScreen> {
     return null;
   }
 
-  Future<String?> GetImage({required final query}) async {
+  Future<String?> getImage({required String query}) async {
     if (imageUrlMap.containsKey(query)) {
       return imageUrlMap[query];
     } else {
@@ -64,24 +72,25 @@ class _Search extends State<searchScreen> {
     return null;
   }
 
-  Widget SearchBar() {
+  Widget searchBar() {
     return TextField(
       onChanged: (value) => loadAnimes(value),
-      style: TextStyle(color: Color(0xff5D4242)),
+      style: const TextStyle(color: Color(0xff5D4242)),
       decoration: InputDecoration(
         filled: true,
-        fillColor: Color(0xffF1DCD1),
+        fillColor: const Color(0xffF1DCD1),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(40),
         ),
         hintText: 'Search manga',
-        prefixIcon: Icon(Icons.search, color: Color(0xff5D4242)),
+        prefixIcon: const Icon(Icons.search, color: Color(0xff5D4242)),
       ),
     );
   }
 
-  Widget SearchResults() {
+  Widget searchResults() {
     return ListView.builder(
+      controller: _scrollController,
       itemCount: dataList.length,
       itemBuilder: (context, index) {
         final manga = dataList[index];
@@ -91,10 +100,10 @@ class _Search extends State<searchScreen> {
         final status = manga['attributes']['status'];
 
         return FutureBuilder<String?>(
-          future: GetImage(query: coverID ?? ''),
+          future: getImage(query: coverID ?? ''),
           builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
@@ -109,15 +118,14 @@ class _Search extends State<searchScreen> {
                       Navigator.pushNamed(context, 'chapter', arguments: ID);
                     },
                     child: Container(
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       child: Card(
                         elevation: 5,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Container(
-                          margin: EdgeInsets.all(
-                              10.0), // Replace Padding with Container and margin
+                          margin: const EdgeInsets.all(10.0), // Replace Padding with Container and margin
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -127,24 +135,23 @@ class _Search extends State<searchScreen> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     image: DecorationImage(
-                                      image:
-                                          CachedNetworkImageProvider(imageUrl),
+                                      image: CachedNetworkImageProvider(imageUrl),
                                       fit: BoxFit.fitHeight,
                                     ),
                                   ),
                                 ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(
                                 title ?? 'No title',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Text(
                                 status ?? 'Unknown status',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey,
                                 ),
@@ -166,34 +173,40 @@ class _Search extends State<searchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // This line ensures the state is kept alive
     return Scaffold(
-      backgroundColor: Color(0xFFF1DCD1),
+      backgroundColor: const Color(0xFFF1DCD1),
       appBar: AppBar(
-        title: Text('SEARCH',
-            style: TextStyle(
-              color: Color(0xff150B0B),
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            )),
-        backgroundColor: Color(0xFF219F94),
+        title: const Text(
+          'SEARCH',
+          style: TextStyle(
+            color: Color(0xff150B0B),
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF219F94),
         elevation: 5,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 80,
-              child: SearchBar(),
+              child: searchBar(),
             ),
             Expanded(
-              child: SearchResults(),
+              child: searchResults(),
             ),
           ],
         ),
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

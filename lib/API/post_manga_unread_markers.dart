@@ -13,7 +13,7 @@ import 'package:oms/API/authencation.dart';
 
 
 
-Future<String> PostMangaReadMarkers( {
+Future<String> PostMangaUnReadMarkers( {
   required String idmanga,
   required String idchapter,
   bool updateHistory = true,
@@ -27,11 +27,11 @@ Future<String> PostMangaReadMarkers( {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode({
-       'chapterIdsRead': [idchapter],
+       'chapterIdsUnread': [idchapter],
     }),
   );
   if (response.statusCode == 200) {
-    print("rs" );
+    print("urs" );
       return (response.statusCode).toString();
   }
   else {
