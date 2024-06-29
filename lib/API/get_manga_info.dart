@@ -18,8 +18,7 @@ Future<Map<String,dynamic>> GetMangaInfo({
   try{
     final response = await http.get(
       Uri.parse('$baseUrl/$query'),
-    ).timeout(const Duration(seconds: 10));
-    print('$baseUrl/$query');
+    );
     if (response.statusCode == 200) {
         data= json.decode(response.body);
         Map<String,dynamic> check = data != null ? data : {};
@@ -27,11 +26,12 @@ Future<Map<String,dynamic>> GetMangaInfo({
         return check;
     }
     else {
-      print('Error: ${response.statusCode}');
+       return {};
     }
   }catch(e){
     if(e is ClientException){
       print('Failed to load data: $e');
+       return {};
     }
   }
     return {};

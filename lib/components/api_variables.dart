@@ -1,6 +1,8 @@
-import 'dart:ffi';
 
-class ApiVariables {
+
+import 'package:flutter/foundation.dart';
+
+class ApiVariables  extends ChangeNotifier{
   // Khai báo các biến instance với dấu _ trước tên biến để chỉ ra rằng chúng là private
   String _username;
   String _password;
@@ -54,7 +56,12 @@ class ApiVariables {
   }
 
   set isLogin(bool value) {
-    _isLogin = value;
+    if(_isLogin != value)
+    {
+      _isLogin = value;
+      print("da thay doi gia tri ");
+      notifyListeners();
+    }
   }
 }
 

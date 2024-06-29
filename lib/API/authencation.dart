@@ -32,12 +32,11 @@ Future<String?> getResfreshingToken(String username, String password, String cli
     body: creds,
   );
 
-    if (response.statusCode == 200) {
+  if (response.statusCode == 200) {
     final Map<String, dynamic> rJson = json.decode(response.body);
     final String accessToken = rJson["access_token"];
     final String refreshToken = rJson["refresh_token"];
     
-    print("Access Token: $accessToken");
     print("Refresh Token: $refreshToken");
     return refreshToken;
   } else {

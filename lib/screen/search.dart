@@ -68,7 +68,9 @@ class _Search extends State<searchScreen>  {
         borderRadius: BorderRadius.circular(40),
         ),
       hintText: 'Search manga',
-      prefixIcon: Icon(Icons.search, color: Color(0xff5D4242)),
+      prefixIcon: Icon(
+        Icons.search, color: Color(0xff5D4242)
+      ),
       ),
     );
   }
@@ -173,7 +175,7 @@ class _Search extends State<searchScreen>  {
           )
         ),
         backgroundColor: Color(0xFF219F94),
-        elevation: 0.0,
+        elevation: 5,
       ),
       body: Padding(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
