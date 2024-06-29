@@ -8,7 +8,7 @@ import 'package:oms/config/app_config.dart';
 class LoginFormDialog extends StatefulWidget {
   @override
   const LoginFormDialog({Key? key}) : super(key: key);
-  State<LoginFormDialog> createState() =>  _LoginFormDialogState();
+  State<LoginFormDialog> createState() => _LoginFormDialogState();
 }
 
 class _LoginFormDialogState extends State<LoginFormDialog> {
@@ -20,7 +20,7 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
   //   if (user.isEmpty || password.isEmpty) {
   //     print('Please fill all fields');
   //     return;
-  //   } 
+  //   }
   //   QuerySnapshot querySnapshot = await firestore.collection('mangadex_account').get();
   //   for (var doc in querySnapshot.docs) {
   //     if(doc.id == user && doc['password'] == password)
@@ -46,31 +46,30 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
   // }
 
   // dung de xu ly tinh nang
-   Future<bool> CheckAccountMangadex(String user,String password) async {
-        user = 'Thanh8806';
-        password = 'thanh080804@gmail.com';
-        String clientId = 'personal-client-b899bbf6-0f42-4136-96a2-74fbeb8d9176-dd343205';
-        String secretID= 'R4Lopt85Qgv7keEEGLMdK7dRCCW5kCCH';
-        String? response = await getResfreshingToken(user, password, clientId, secretID);
-        if(response != null){
-          apiVariables.clientId = clientId;
-          apiVariables.secretId = secretID;
-          apiVariables.refreshToken = response;
-          apiVariables.username = user;
-          apiVariables.password = password;
-          apiVariables.isLogin = true;
-          if(apiVariables.refreshToken != null){
-            return true;
-          }
-          else{
-            return false;
-          }
-          }
-        else{
-          return false;
-        }
+  Future<bool> CheckAccountMangadex(String user, String password) async {
+    user = 'Tuan21522763';
+    password = '21522763';
+    String clientId =
+        'personal-client-39cf2f3c-4e7c-4a42-a1a8-060805b4718a-f7ff9e8b';
+    String secretID = 'lkUCV6TI7dVvcoCFth3hjkPmIvR2pqLv';
+    String? response =
+        await getResfreshingToken(user, password, clientId, secretID);
+    if (response != null) {
+      apiVariables.clientId = clientId;
+      apiVariables.secretId = secretID;
+      apiVariables.refreshToken = response;
+      apiVariables.username = user;
+      apiVariables.password = password;
+      apiVariables.isLogin = true;
+      if (apiVariables.refreshToken != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -134,22 +133,22 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                   child: Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: ()async {
+                  onPressed: () async {
                     // Handle Login action
-                    String username= _usernameController.text;
+                    String username = _usernameController.text;
                     String password = _passwordController.text;
                     // Implement login logic here
                     bool check = await CheckAccountMangadex(username, password);
-                    if(check == true){
+                    if (check == true) {
                       Navigator.pop(context);
-                    }
-                    else{
+                    } else {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text('Login failed'),
-                            content: Text('Please check your username and password again'),
+                            content: Text(
+                                'Please check your username and password again'),
                             actions: [
                               TextButton(
                                 onPressed: () {
