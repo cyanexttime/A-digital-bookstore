@@ -8,6 +8,7 @@ import 'package:oms/API/authencation.dart';
 import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_list_apiclient.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
+import 'package:oms/Constants/appColor.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -185,7 +186,7 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color(0xFF219F94),
+        backgroundColor: AppColor.darkCyan,
         elevation: 5,
       ),
       body: Padding(

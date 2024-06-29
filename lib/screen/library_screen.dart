@@ -57,7 +57,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   Widget Results(String value) {
     if (apiVariables.isLogin != true) {
-      print("here");
       return Center(child: Text("Please Login Mangadex Account"));
     } else {
       return FutureBuilder<dynamic>(

@@ -123,7 +123,8 @@ class _ChapterState extends State<Chapter> {
       bookmarkBloc.SetCount(data.length);
       for (var value in dataBookMarkers) {
         ItemModel item = ItemModel(
-          nameChapter: value.toString(),
+          nameChapter: value.toString(), transLanguage: '',
+          chapterID: value,
         );
         bookmarkBloc.AddItem(item);
       }
@@ -310,7 +311,7 @@ class _ChapterState extends State<Chapter> {
                               return const Center(child: CircularProgressIndicator());
                             }
                             final List? chapterBonus = snapshot.data; // List ? có nghĩa nó có thể giá trị null 
-                            print (chapterBonus);
+                   
                             return GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(context,'chapterContent',arguments: chapter['id']);
@@ -325,7 +326,7 @@ class _ChapterState extends State<Chapter> {
                                     isBookmarked
                                         ? Icons.bookmark
                                         : Icons.bookmark_border,
-                                    color: Colors.blueAccent,
+                                    color: const Color(0xFF219F94),
                                   ),
                                   onPressed: () async {
                                     if (!apiVariables.isLogin) {
@@ -339,8 +340,9 @@ class _ChapterState extends State<Chapter> {
                                       );
                                     } else {
                                       ItemModel item = ItemModel(
-                                        nameChapter:
-                                            '${chapter['chapter'] ?? 'No title'}',
+                                        chapterID: chapter['id'],
+                                        nameChapter:'${chapter['chapter'] ?? ''}-${chapterBonus![0] ?? 'No title'}' ,
+                                        transLanguage: '${chapterBonus![1] ?? 'No language'}'
                                       );
                                       if (isBookmarked) {
                                         dataBookMarkers.remove(chapter['id']);
@@ -521,9 +523,12 @@ class _ChapterState extends State<Chapter> {
         appBar: AppBar(
           title: Text('Chapters'),
           actions: [
-            Text(bookmarkBloc.count.toString()),
+            Text(bookmarkBloc.count.toString(), style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             IconButton(
               icon: Icon(Icons.bookmark),
+              style: ButtonStyle(
+                iconSize: MaterialStateProperty.all(30),
+              ),
               onPressed: () {
                 Navigator.pushNamed(context, 'bookmarkPage');
               },
