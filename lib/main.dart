@@ -1,18 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:oms/chapter.dart';
-import 'package:oms/chapter_content.dart';
-import 'package:oms/message_box_screen.dart';
-import 'package:oms/screen/homePage.dart';
-import 'package:oms/screen/introducePage.dart';
-import 'package:oms/screen/login.dart';
-import 'package:oms/screen/register.dart';
-import 'package:oms/screen/resetpass.dart';
-import 'package:oms/screen/search.dart';
-import 'package:oms/sign_in_magadex.dart';
-import 'package:oms/sign_up_mangadex.dart';
+import 'package:oms/config/routes/routes.dart';
+import 'package:oms/screen/settings_screen.dart';
 import 'firebase_options.dart';
-
+import 'package:oms/config/theme/app_theme.dart';
+import 'package:oms/cubits/cubit_theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 void main() async {
@@ -21,22 +14,38 @@ WidgetsFlutterBinding.ensureInitialized();
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: 'home',
-      title: 'OMS',
-      routes: {
-        'login': (context) => MyLogin(),
-        'register': (context) => myRegister(),
-        'forgot': (context) => resetPassword(),
-        'home': (context) => HomeScreen(),
-        'introducePage': (context) => IntroducePage(),
-        'searchScreen':(context) => searchScreen(),
-        'chapterContent': (context) => ChapterContent(),
-        'chapter': (context) => Chapter(),
-        'signInMangadex': (context) => LoginFormDialog(),
-        'signUpMangadex': (context) => RegisterFormDialog(),
-      },
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => Themecubit(),
+        ),
+        
+      ],
+      child: const MyApp(),
     ),
   );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<Themecubit, ThemeMode>(
+      builder: (context, state) {
+        final themeMode = state;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          themeMode: themeMode,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          home: const SettingsScreen(),
+          onGenerateRoute: onGenerateRoute,
+        );
+      },
+    );
+  }
 }

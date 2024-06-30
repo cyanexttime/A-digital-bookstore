@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:oms/components/toast.dart';
 
 class resetPassword extends StatefulWidget {
   const resetPassword({Key? key}) : super(key: key);
@@ -14,21 +13,22 @@ class _resetPasswordState extends State<resetPassword> {
   final TextEditingController _newPasswordController = TextEditingController();
 
   void _sendNewPassword(BuildContext context) async{
-      try{
-        String newPassword = _newPasswordController.text;
-        await FirebaseAuth.instance.sendPasswordResetEmail(email: newPassword);
-        showToast('Password reset email sent');
-      }
-      catch (e){
-        showToast('Error: $e');
-      }
+      String newPassword = _newPasswordController.text;
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: newPassword);
+
   }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      
       child: Container(
-        color: Color(0xFFF1DCD1),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/login.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
@@ -37,9 +37,17 @@ class _resetPasswordState extends State<resetPassword> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 300,
-                    height: 300,
-                    child: Image.asset('assets/main_logo.png'),
+                    padding: const EdgeInsets.only(
+                      top: 60.0,
+                    ),
+                    child: const Text(
+                      'RESET \n NOW',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40.0,
+                      ),
+                    ),
                   ),
                 ],
               ),
