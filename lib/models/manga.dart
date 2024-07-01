@@ -20,4 +20,6 @@ class Manga {
           json['ranking'] != null ? Ranking.fromJson(json['ranking']) : null,
     );
   }
+
+  get id => null;
 }

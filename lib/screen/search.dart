@@ -1,12 +1,6 @@
-import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
-import 'package:oms/API/accessToken.dart';
-import 'package:oms/API/authencation.dart';
 import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_list_apiclient.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
@@ -16,13 +10,15 @@ String query = '';
 List dataList = [];
 
 class searchScreen extends StatefulWidget {
-  searchScreen({Key? key}) : super(key: key);
+  const searchScreen({super.key});
+  @override
   State<searchScreen> createState() => _Search();
 }
 
 class _Search extends State<searchScreen>  {
 
 
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -35,7 +31,7 @@ class _Search extends State<searchScreen>  {
   }
 
  Future<void> loadAnimes(String value) async {
-  final data = await getMangasBySearchApi(query: '$value');
+  final data = await getMangasBySearchApi(query: value);
   setState(() {
     dataList = data;
   });
@@ -55,20 +51,21 @@ class _Search extends State<searchScreen>  {
     if (imageData.isNotEmpty) {
       return imageData['data']['attributes']['fileName'];
     }
+    return null;
   }
 
   Widget SearchBar(){
   return TextField(
     onChanged: (value) => loadAnimes(value),
-    style: TextStyle(color: Color(0xff5D4242)),
+    style: const TextStyle(color: Color(0xff5D4242)),
     decoration:InputDecoration(
       filled: true,
-      fillColor: Color(0xffF1DCD1),
+      fillColor: const Color(0xffF1DCD1),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(40),
         ),
       hintText: 'Search manga',
-      prefixIcon: Icon(
+      prefixIcon: const Icon(
         Icons.search, color: Color(0xff5D4242)
       ),
       ),
@@ -90,7 +87,7 @@ class _Search extends State<searchScreen>  {
       future: GetImage(query: coverID ?? ''),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -106,14 +103,14 @@ class _Search extends State<searchScreen>  {
                             },
                             
                             child:Container(
-                              padding: EdgeInsets.all(3),
+                              padding: const EdgeInsets.all(3),
                               child:Card(
                               elevation: 5,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Container(
-                                margin: EdgeInsets.all(10.0), // Replace Padding with Container and margin
+                                margin: const EdgeInsets.all(10.0), // Replace Padding with Container and margin
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -128,18 +125,18 @@ class _Search extends State<searchScreen>  {
                                           ),
                                         ),
                                       ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Text(
                                       title ?? 'No title',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    SizedBox(height: 5),
+                                    const SizedBox(height: 5),
                                     Text(
                                       status ?? 'Unknown status',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey,
                                       ),
@@ -164,9 +161,9 @@ class _Search extends State<searchScreen>  {
   Widget build (BuildContext context)
   {
     return Scaffold(
-      backgroundColor: Color(0xFFF1DCD1),
+      backgroundColor: const Color(0xFFF1DCD1),
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'SEARCH',
           style: TextStyle(
           color: Color(0xff150B0B),
@@ -174,21 +171,21 @@ class _Search extends State<searchScreen>  {
           fontWeight: FontWeight.bold,
           )
         ),
-        backgroundColor: Color(0xFF219F94),
+        backgroundColor: const Color(0xFF219F94),
         elevation: 5,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: SingleChildScrollView(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Container(
+          SizedBox(
             height: 80,
             child:SearchBar(),
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height - 280, // 85 is the total height of other widgets
             child: SearchResults(),
           ),

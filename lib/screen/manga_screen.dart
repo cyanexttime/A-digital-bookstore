@@ -1,8 +1,4 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:oms/common/styles/paddings.dart';
 import 'package:oms/view/FeaturedMangas.dart';
 import 'package:oms/widgets/TopMangasList.dart';

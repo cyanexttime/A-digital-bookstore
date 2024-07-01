@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:oms/API/get_book_by_ranking_type.dart';
 import 'package:oms/core/screens/error_screen.dart';
 import 'package:oms/core/widgets/loader.dart';
+import 'package:oms/screen/view_all.dart';
 import 'package:oms/widgets/MangaTile.dart';
 
 class FeaturedMangas extends StatelessWidget {
@@ -40,7 +40,14 @@ class FeaturedMangas extends StatelessWidget {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ViewAllManga(
+                                  rankingType: rankingType, label: labels),
+                            ),
+                          );
+                        },
                         child: const Text('View all'),
                       ),
                     ],

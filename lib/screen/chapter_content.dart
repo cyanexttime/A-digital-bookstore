@@ -6,7 +6,7 @@ import 'package:oms/API/get_chapter_content.dart';
 
 
 class ChapterContent extends StatefulWidget {
-  const ChapterContent({Key? key}) : super(key: key);
+  const ChapterContent({super.key});
 
   @override
   State<ChapterContent> createState() => _ChapterContentState();
@@ -17,6 +17,7 @@ class  _ChapterContentState extends State <ChapterContent> {
   List<dynamic> dataImageList = [];
   late String baseUrl;
   late String hash;
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -26,7 +27,7 @@ class  _ChapterContentState extends State <ChapterContent> {
   }
 
   Future<void> LoadChapter(String value) async {
-  Map<String,dynamic> data = await GetChapterContent(query: '$value');
+  Map<String,dynamic> data = await GetChapterContent(query: value);
   setState(() {
     dataList = data;
     if (dataList.isEmpty) {
@@ -47,8 +48,8 @@ class  _ChapterContentState extends State <ChapterContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chapter Content'),
-        backgroundColor: Color(0xFF219F94),
+        title: const Text('Chapter Content'),
+        backgroundColor: const Color(0xFF219F94),
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(12),
@@ -56,7 +57,7 @@ class  _ChapterContentState extends State <ChapterContent> {
         separatorBuilder:   (context, index) => const SizedBox(height: 5),
         itemBuilder: (context, index) => CachedNetworkImage(
           key: UniqueKey (),
-          imageUrl: baseUrl + '/data/' + hash +'/' + dataImageList[index],
+          imageUrl: '$baseUrl/data/$hash/' + dataImageList[index],
           width: double.infinity,
           fit: BoxFit.cover,
           placeholder: (context, url) => const Center(child: CircularProgressIndicator()),

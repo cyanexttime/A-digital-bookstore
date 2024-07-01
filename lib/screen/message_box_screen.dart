@@ -5,14 +5,14 @@ import 'package:oms/screen/chapter.dart';
 class MessageBoxScreen {
   
   final _selectedOption = ValueNotifier<String>(currentStatus);
-  List<String> _options = ['None', 'Reading', 'On Hold', 'Dropped', 'Plan to Read', 'Completed', 'Re-Reading'];
+  final List<String> _options = ['None', 'Reading', 'On Hold', 'Dropped', 'Plan to Read', 'Completed', 'Re-Reading'];
   final checkNotification = ValueNotifier<bool>(false); 
   void showMessageBox(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add to library'),
+          title: const Text('Add to library'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -56,7 +56,7 @@ class MessageBoxScreen {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -70,7 +70,7 @@ class MessageBoxScreen {
                 });
                 Navigator.of(context).pop();
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );

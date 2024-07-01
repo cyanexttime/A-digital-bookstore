@@ -1,12 +1,7 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:oms/API/delete_manga_rating.dart';
 import 'package:oms/API/follow_manga.dart';
 import 'package:oms/API/get_a_manga_reading_status.dart';
@@ -19,15 +14,12 @@ import 'package:oms/API/get_manga_read_markers.dart';
 import 'package:oms/API/post_manga_rating.dart';
 import 'package:oms/API/post_manga_read_markers.dart';
 import 'package:oms/API/unfollow_manga.dart';
-import 'package:oms/API/post_manga_reading_status.dart';
 import 'package:oms/components/SignIn_SignUp_Magadex/sign_in_magadex.dart';
 import 'package:oms/components/api_variables.dart';
 import 'package:oms/screen/message_box_screen.dart';
-import 'package:oms/models/manga.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class Chapter extends StatefulWidget {
-  const Chapter({Key? key}) : super(key: key);
+  const Chapter({super.key});
 
   @override
   State<Chapter> createState() => _ChapterState();
@@ -105,7 +97,7 @@ class _ChapterState extends State<Chapter> {
     "re_reading": "Re-reading",
   };
   Future<void> LoadMangaReadMarkers(String value) async {
-    final data = await GetMangaReadMarkers(query: '$value');
+    final data = await GetMangaReadMarkers(query: value);
     if (data.isNotEmpty) {
       dataBookMarkers = data;
       if (kDebugMode) {
@@ -115,7 +107,7 @@ class _ChapterState extends State<Chapter> {
   }
 
   Future<void> LoadReadingStatus(String value) async {
-    final statusdata = await GetAMangaReadingStatus(query: '$value');
+    final statusdata = await GetAMangaReadingStatus(query: value);
     if (statusdata != null) {
       currentStatus = statusdata.toString();
       currentStatus = changeTemp[currentStatus]!;
@@ -125,18 +117,18 @@ class _ChapterState extends State<Chapter> {
   }
 
   Future<void> LoadMangaRating(String value) async {
-    final rating = await GetMangaRating(query: '$value');
+    final rating = await GetMangaRating(query: value);
     setState(() {
-      ratingValue = rating?.toString() ?? '0';
+      ratingValue = rating.toString() ?? '0';
     });
   }
 
   Future<void> LoadAuthor(String value) async {
-    if (value == null || value.trim().isEmpty) {
+    if (value.trim().isEmpty) {
       print('Invalid author ID');
       return;
     }
-    final data = await GetAuthor(query: '$value');
+    final data = await GetAuthor(query: value);
     print(data);
     if (mounted) {
       setState(() {
@@ -154,7 +146,7 @@ class _ChapterState extends State<Chapter> {
   }
 
   Future<void> LoadVolumesAndChapters(String value) async {
-    final data = await GetChapterList(query: '$value');
+    final data = await GetChapterList(query: value);
     if (mounted) {
       setState(() {
         dataVolumesAndChapters = data;
@@ -166,7 +158,7 @@ class _ChapterState extends State<Chapter> {
   }
 
   Future<void> LoadChapterList(String value) async {
-    final data = await GetChapterList(query: '$value');
+    final data = await GetChapterList(query: value);
 
     if (mounted) {
       setState(() {
@@ -180,7 +172,7 @@ class _ChapterState extends State<Chapter> {
   }
 
   Future<void> LoadMangaInfo(String value) async {
-    final dataMangaInfo = await GetMangaInfo(query: '$value');
+    final dataMangaInfo = await GetMangaInfo(query: value);
     if (mounted) {
       setState(() {
         dataManga = dataMangaInfo;
@@ -220,10 +212,10 @@ class _ChapterState extends State<Chapter> {
       return CachedNetworkImage(
         imageUrl: imageUrl,
         placeholder: (context, url) =>
-            Center(child: CircularProgressIndicator()),
+            const Center(child: CircularProgressIndicator()),
       );
     } else {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
   }
 
@@ -248,9 +240,8 @@ class _ChapterState extends State<Chapter> {
   }
 
   Widget ShowVolumes() {
-    if (dataVolumesAndChapters == null ||
-        dataVolumesAndChapters['volumes'] == null) {
-      return Center(child: CircularProgressIndicator());
+    if (dataVolumesAndChapters['volumes'] == null) {
+      return const Center(child: CircularProgressIndicator());
     }
 
     int countVolume = dataVolumesAndChapters['volumes'].length;
@@ -297,7 +288,7 @@ class _ChapterState extends State<Chapter> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => LoginFormDialog(),
+                                  builder: (context) => const LoginFormDialog(),
                                 )).then(
                               (value) => _handleLoginChange(),
                             );
@@ -340,20 +331,21 @@ class _ChapterState extends State<Chapter> {
 
   Widget buildMangaInfo() {
     if (dataManga.isEmpty) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.black,
                 fontSize: 22,
                 fontWeight: FontWeight.bold)),
-        Text(japanese, style: TextStyle(color: Colors.black, fontSize: 15)),
+        Text(japanese,
+            style: const TextStyle(color: Colors.black, fontSize: 15)),
         Text(author,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 15,
             )),
@@ -382,88 +374,82 @@ class _ChapterState extends State<Chapter> {
       // width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        
         children: [
-               Expanded(
-                 child: ElevatedButton(
-                  
-                  onPressed: () {
-                  if (apiVariables.isLogin) {
-                    MessageBoxScreen().showMessageBox(context);
-                  } else {
-                    Navigator.pushNamed(context, 'signInMangadex');
-                  }
-                  },
-                        
-                  child: const Text('Add to library'),
-                  style: ElevatedButton.styleFrom( 
-                    foregroundColor: Color(0xFF219F94), 
-                    fixedSize: Size(150, 50),
-                    backgroundColor: Colors.white,
-                    shadowColor: Color(0xFF219F94),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    )
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                if (apiVariables.isLogin) {
+                  MessageBoxScreen().showMessageBox(context);
+                } else {
+                  Navigator.pushNamed(context, 'signInMangadex');
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: const Color(0xFF219F94),
+                  fixedSize: const Size(150, 50),
+                  backgroundColor: Colors.white,
+                  shadowColor: const Color(0xFF219F94),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-               ),
-               ),
-               SizedBox(width: 10),
-               Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 1),
-                  borderRadius: BorderRadius.circular(8),
-                  
-                ),
-                alignment: Alignment.centerLeft,
-                transformAlignment: Alignment.bottomRight,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: GestureDetector(
-                  onTap: () async {
-                    if (!apiVariables.isLogin) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginFormDialog(),
-                          )).then(
-                        (value) => _handleLoginChange(),
-                      );
-                    }
-                  },
-                  child: AbsorbPointer(
-                      absorbing: !apiVariables.isLogin,
-                      child: DropdownButton<String>(
-                        value: ratingValue,
-                        
-                        onChanged: (value) {
-                          setState(() => ratingValue = value!);
-                          if (value == null || value == '0') {
-                            print('Delete');
-                            DeleteMangaRating(idmanga: mangaID);
-                          } else {
-                            UpdateManagaRating(value);
-                          }
-                        },
-                        items: _evaluationOptions.map(buildMenuItem).toList(),
-                        dropdownColor: Colors.white,
-                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 30),
-                        iconEnabledColor: Colors.black,  
-                        underline: Container(),
-                        iconSize: 30,
-                      )
-                      
-                      ),
-                ),
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  )),
+              child: const Text('Add to library'),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.centerLeft,
+              transformAlignment: Alignment.bottomRight,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: GestureDetector(
+                onTap: () async {
+                  if (!apiVariables.isLogin) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginFormDialog(),
+                        )).then(
+                      (value) => _handleLoginChange(),
+                    );
+                  }
+                },
+                child: AbsorbPointer(
+                    absorbing: !apiVariables.isLogin,
+                    child: DropdownButton<String>(
+                      value: ratingValue,
+                      onChanged: (value) {
+                        setState(() => ratingValue = value!);
+                        if (value == null || value == '0') {
+                          print('Delete');
+                          DeleteMangaRating(idmanga: mangaID);
+                        } else {
+                          UpdateManagaRating(value);
+                        }
+                      },
+                      items: _evaluationOptions.map(buildMenuItem).toList(),
+                      dropdownColor: Colors.white,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30),
+                      iconEnabledColor: Colors.black,
+                      underline: Container(),
+                      iconSize: 30,
+                    )),
               ),
             ),
-        ], 
+          ),
+        ],
       ),
     );
-
   }
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
@@ -471,11 +457,11 @@ class _ChapterState extends State<Chapter> {
       onTap: () {},
       child: Row(
         children: [
-          Icon(Icons.star, color: Colors.amber, size: 30),
-          SizedBox(width: 3),
+          const Icon(Icons.star, color: Colors.amber, size: 30),
+          const SizedBox(width: 3),
           Text(
             item,
-            style: TextStyle(fontSize: 30),
+            style: const TextStyle(fontSize: 30),
           )
         ],
       ));
@@ -483,13 +469,13 @@ class _ChapterState extends State<Chapter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFF1DCD1),
+        backgroundColor: const Color(0xFFF1DCD1),
         appBar: AppBar(
-          title: Text('Chapters'),
-          backgroundColor: Color(0xFF219F94),
+          title: const Text('Chapters'),
+          backgroundColor: const Color(0xFF219F94),
         ),
         body: Container(
-            padding: EdgeInsets.all(13),
+            padding: const EdgeInsets.all(13),
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -498,8 +484,7 @@ class _ChapterState extends State<Chapter> {
                       Expanded(
                         flex: 2, // Ảnh sẽ chiếm 2/3 không gian
                         child: Container(
-                          margin: EdgeInsets.all(10),
-                          child: buildImage(),
+                          margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black),
                             boxShadow: [
@@ -507,11 +492,12 @@ class _ChapterState extends State<Chapter> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 5,
                                 blurRadius: 7,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
+                          child: buildImage(),
                         ),
                       ),
                       Expanded(
@@ -522,14 +508,14 @@ class _ChapterState extends State<Chapter> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   buildSnackBar(context),
                   Text(description,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 15,
                       )),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   ShowVolumes(),
                 ],
               ),

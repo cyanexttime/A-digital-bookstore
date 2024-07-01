@@ -5,4 +5,5 @@ Future<String?> GetImage({required final query}) async {
     if (imageData.isNotEmpty) {
       return imageData['data']['attributes']['fileName'];
     }
+    return null;
   }
