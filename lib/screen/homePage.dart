@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   get _screens => [
         const MangaScreen(),
         const SearchScreen(),
-        LibraryScreen(),
+        const LibraryScreen(),
         const SettingsScreen()
       ];
 
@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: NavigationBar(
           key: _bottomNavigationKey,
           elevation: 5,
-          backgroundColor: AppColor.skinPink,
+          backgroundColor: AppColor.darkCyan,
           selectedIndex: _selectedIndex,
           destinations: _destinations,
           onDestinationSelected: (value) {

@@ -1,15 +1,10 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:ffi';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:oms/API/get_all_reading_status.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_manga_info.dart';
-import 'package:oms/Constants/appColor.dart';
 import 'package:oms/components/api_variables.dart';
 import 'package:oms/components/get_coverID.dart';
 import 'package:oms/components/get_image.dart';
@@ -137,7 +132,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             future: _futures[mangaID],
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -161,9 +156,9 @@ class _LibraryScreenState extends State<LibraryScreen>
                           child: CachedNetworkImage(
                             imageUrl: imageUrl,
                             placeholder: (context, url) =>
-                                Center(child: CircularProgressIndicator()),
+                                const Center(child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                                const Icon(Icons.error),
                             fit: BoxFit.fitHeight,
                           ),
                         ),
@@ -202,7 +197,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          child: Text('Read'),
+                          child: const Text('Read'),
                         ),
                       ),
                     ],

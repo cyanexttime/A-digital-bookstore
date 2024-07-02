@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oms/API/get_manga_details.dart';
 import 'package:oms/view/SimilarMangasView.dart';
 import 'package:oms/widgets/info_text.dart';
-import '/common/extensions/extensions.dart';
 import '/common/styles/paddings.dart';
 import '/common/styles/text_styles.dart';
 import '/common/widgets/ios_back_button.dart';

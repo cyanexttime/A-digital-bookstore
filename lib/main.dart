@@ -11,7 +11,6 @@ import 'package:oms/screen/bookmarks_page.dart';
 import 'package:oms/screen/chapter.dart';
 import 'package:oms/screen/chapter_content.dart';
 import 'package:oms/screen/library_screen.dart';
-import 'package:oms/screen/message_box_screen.dart';
 import 'package:oms/screen/homePage.dart';
 import 'package:oms/screen/introducePage.dart';
 import 'package:oms/screen/login.dart';
@@ -70,7 +69,7 @@ class MyApp extends StatelessWidget {
             'chapterContent': (context) => const ChapterContent(),
             'chapter': (context) => const Chapter(),
             'signInMangadex': (context) => const LoginFormDialog(),
-            'signUpMangadex': (context) => RegisterFormDialog(),
+            'signUpMangadex': (context) => const RegisterFormDialog(),
             'library': (context) => const LibraryScreen(),
             'bookmarkPage': (context) => const BookmarksPage(),
             'settings': (context) => const SettingsScreen(),

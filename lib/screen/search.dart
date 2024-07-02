@@ -1,11 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:oms/API/accessToken.dart';
-import 'package:oms/API/authencation.dart';
 import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
-import 'package:oms/Constants/appColor.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

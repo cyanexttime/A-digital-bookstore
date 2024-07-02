@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:oms/API/get_book_by_ranking_type.dart';
-import 'package:oms/core/screens/error_screen.dart';
-import 'package:oms/core/widgets/loader.dart';
 import 'package:oms/models/manga_node.dart';
 import 'package:oms/screen/manga_details_screen.dart';
 import 'package:oms/widgets/MangaTile.dart';

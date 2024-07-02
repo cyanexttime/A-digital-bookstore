@@ -30,7 +30,7 @@ class _resetPasswordState extends State<ResetPassword> {
     return SafeArea(
       
       child: Container(
-        color: Color(0xFFF1DCD1),
+        color: const Color(0xFFF1DCD1),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
@@ -38,7 +38,7 @@ class _resetPasswordState extends State<ResetPassword> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 300,
                     height: 300,
                     child: Image.asset('assets/main_logo.png'),
@@ -76,7 +76,7 @@ class _resetPasswordState extends State<ResetPassword> {
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(170.0, 90.0),
                                 minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: Color(0xff80669d),
+                                backgroundColor: const Color(0xff80669d),
                                 shape: const StadiumBorder(),
                               ),
                               onPressed: () {

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class IosBackButton extends StatelessWidget {
   const IosBackButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     this.borderWidth = 2.0,
-  }) : super(key: key);
+  });
 
   final VoidCallback onPressed;
   final double borderWidth;
