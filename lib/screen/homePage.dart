@@ -42,8 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   get _screens => [
         const MangaScreen(),
-        SearchScreen(),
-        LibraryScreen(),
+        const SearchScreen(),
+        const LibraryScreen(),
       ];
 
   @override

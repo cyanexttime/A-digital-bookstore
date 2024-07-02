@@ -1,10 +1,8 @@
 
 import 'dart:convert';
-import 'dart:math';
 
 
 
-import 'package:flutter/material.dart';
 
 
 import 'package:http/http.dart' as http;
@@ -16,7 +14,7 @@ Future<List<dynamic>> GetChapterInformation ({
   required String chapterID,
 }) async {
   List data = [];
-  final String baseUrl = "https://api.mangadex.org/chapter";
+  const String baseUrl = "https://api.mangadex.org/chapter";
   try{
     final response = await http.get(
       Uri.parse('$baseUrl/$chapterID'),

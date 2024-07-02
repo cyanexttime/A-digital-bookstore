@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:oms/components/toast.dart';
 
 class resetPassword extends StatefulWidget {
-  const resetPassword({Key? key}) : super(key: key);
+  const resetPassword({super.key});
 
   @override
   _resetPasswordState createState() => _resetPasswordState();
@@ -28,7 +28,7 @@ class _resetPasswordState extends State<resetPassword> {
     return SafeArea(
       
       child: Container(
-        color: Color(0xFFF1DCD1),
+        color: const Color(0xFFF1DCD1),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
@@ -36,7 +36,7 @@ class _resetPasswordState extends State<resetPassword> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 300,
                     height: 300,
                     child: Image.asset('assets/main_logo.png'),
@@ -74,7 +74,7 @@ class _resetPasswordState extends State<resetPassword> {
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(170.0, 90.0),
                                 minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: Color(0xff80669d),
+                                backgroundColor: const Color(0xff80669d),
                                 shape: const StadiumBorder(),
                               ),
                               onPressed: () {

@@ -16,7 +16,7 @@ class _BookmarksPageState extends State<BookmarksPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF1DCD1),
       appBar: AppBar(
-        title: Text("Bookmarks",
+        title: const Text("Bookmarks",
          style: TextStyle(
             color: Color(0xff150B0B),
             fontSize: 22,
@@ -38,10 +38,10 @@ class _BookmarksPageState extends State<BookmarksPage> {
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8.0), // Thêm khoảng cách giữa các mục
                     child: ListTile(
-                      leading: Icon(Icons.bookmark, color: Color(0xFF219F94)), // Thêm biểu tượng bookmark
+                      leading: const Icon(Icons.bookmark, color: Color(0xFF219F94)), // Thêm biểu tượng bookmark
                       title: Text(
                         "Chapter ${bookmarkBloc.items[index].nameChapter}",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
                         "Translation Language:${bookmarkBloc.items[index].transLanguage ?? ''}", // Bạn có thể thêm thông tin phụ

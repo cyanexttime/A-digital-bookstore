@@ -6,7 +6,6 @@ import 'package:oms/screen/bookmarks_page.dart';
 import 'package:oms/screen/chapter.dart';
 import 'package:oms/screen/chapter_content.dart';
 import 'package:oms/screen/library_screen.dart';
-import 'package:oms/screen/message_box_screen.dart';
 import 'package:oms/screen/homePage.dart';
 import 'package:oms/screen/introducePage.dart';
 import 'package:oms/screen/login.dart';
@@ -37,18 +36,18 @@ WidgetsFlutterBinding.ensureInitialized();
       initialRoute: 'home',
       title: 'OMS',
       routes: {
-        'login': (context) => MyLogin(),
-        'register': (context) => myRegister(),
-        'forgot': (context) => resetPassword(),
-        'home': (context) => HomeScreen(),
-        'introducePage': (context) => IntroducePage(),
-        'searchScreen':(context) => SearchScreen(),
-        'chapterContent': (context) => ChapterContent(),
-        'chapter': (context) => Chapter(),
-        'signInMangadex': (context) => LoginFormDialog(),
-        'signUpMangadex': (context) => RegisterFormDialog(),
-        'library':(context) => LibraryScreen(),
-        'bookmarkPage':(context) => BookmarksPage(),
+        'login': (context) => const MyLogin(),
+        'register': (context) => const myRegister(),
+        'forgot': (context) => const resetPassword(),
+        'home': (context) => const HomeScreen(),
+        'introducePage': (context) => const IntroducePage(),
+        'searchScreen':(context) => const SearchScreen(),
+        'chapterContent': (context) => const ChapterContent(),
+        'chapter': (context) => const Chapter(),
+        'signInMangadex': (context) => const LoginFormDialog(),
+        'signUpMangadex': (context) => const RegisterFormDialog(),
+        'library':(context) => const LibraryScreen(),
+        'bookmarkPage':(context) => const BookmarksPage(),
       },
     ),
     ),

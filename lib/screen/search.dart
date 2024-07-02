@@ -1,17 +1,12 @@
-import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:oms/API/accessToken.dart';
-import 'package:oms/API/authencation.dart';
 import 'package:oms/API/get_filename_image.dart';
-import 'package:oms/API/get_list_apiclient.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
 import 'package:oms/Constants/appColor.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -200,7 +195,7 @@ Future<void> loadAnimes(String value) async {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               height: 80,
               child: searchBar(),
             ),

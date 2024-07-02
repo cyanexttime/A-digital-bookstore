@@ -1,11 +1,7 @@
-import 'dart:ffi';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:oms/API/get_all_reading_status.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/Constants/appColor.dart';
 import 'package:oms/components/api_variables.dart';
@@ -13,6 +9,8 @@ import 'package:oms/components/get_coverID.dart';
 import 'package:oms/components/get_image.dart';
 
 class LibraryScreen extends StatefulWidget {
+  const LibraryScreen({super.key});
+
   @override
   _LibraryScreenState createState() => _LibraryScreenState();
 }
@@ -60,7 +58,7 @@ class _LibraryScreenState extends State<LibraryScreen> with AutomaticKeepAliveCl
 
   Future<List<dynamic>> _fetchMangaData(String mangaID) async {
     final mangaInfo = await GetMangaInfo(query: mangaID);
-    final coverID = await getCoverID(mangaInfo['data']['relationships']);
+    final coverID = getCoverID(mangaInfo['data']['relationships']);
     final getImageString = await GetImage(query: coverID);
     final title = mangaInfo['data']['attributes']['title']['en'] ?? '';
     final description = mangaInfo['data']['attributes']['description']['en'] ?? '';
@@ -75,7 +73,7 @@ class _LibraryScreenState extends State<LibraryScreen> with AutomaticKeepAliveCl
     return Scaffold(
       backgroundColor: const Color(0xFFF1DCD1),
       appBar: AppBar(
-        title: Text('LIBRARY',
+        title: const Text('LIBRARY',
          style: TextStyle(
             color: Color(0xff150B0B),
             fontSize: 22,
@@ -128,7 +126,7 @@ class _LibraryScreenState extends State<LibraryScreen> with AutomaticKeepAliveCl
             future: _futures[mangaID],
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -143,15 +141,15 @@ class _LibraryScreenState extends State<LibraryScreen> with AutomaticKeepAliveCl
                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       height: 150,
                       width: double.infinity,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
                         child: CachedNetworkImage(
                           imageUrl: imageUrl,
-                          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                           fit: BoxFit.fitHeight,
                         ),
                       ),
@@ -160,7 +158,7 @@ class _LibraryScreenState extends State<LibraryScreen> with AutomaticKeepAliveCl
                       padding: const EdgeInsets.all(3.0),
                       child: Text(
                         snapshot.data?[2] ?? 'No title',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
@@ -174,7 +172,7 @@ class _LibraryScreenState extends State<LibraryScreen> with AutomaticKeepAliveCl
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 3),
@@ -189,7 +187,7 @@ class _LibraryScreenState extends State<LibraryScreen> with AutomaticKeepAliveCl
                             
                           ),
                         ),
-                        child: Text('Read'),
+                        child: const Text('Read'),
                       ),
                     ),
                   ],
@@ -199,7 +197,7 @@ class _LibraryScreenState extends State<LibraryScreen> with AutomaticKeepAliveCl
           },
         );
       },
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 10.0,
