@@ -35,8 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
     const NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
     const NavigationDestination(
         icon: Icon(Icons.library_add), label: 'Library'),
-    const NavigationDestination(
-        icon: Icon(Icons.settings), label: 'Notifications'),
     const NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
   ];
   get _screens => [
@@ -55,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: NavigationBar(
           key: _bottomNavigationKey,
           elevation: 5,
-          backgroundColor: AppColor.darkCyan,
+          backgroundColor: AppColor.skinPink,
           selectedIndex: _selectedIndex,
           destinations: _destinations,
           onDestinationSelected: (value) {
