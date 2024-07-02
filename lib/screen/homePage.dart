@@ -1,20 +1,21 @@
+// ignore: file_names
+
+
 import 'package:flutter/material.dart';
 
 import 'package:oms/Constants/appColor.dart';
-import 'package:oms/Constants/constants.dart';
-import 'package:oms/models/manga.dart';
-
 import 'package:oms/screen/manga_screen.dart';
+import 'package:oms/screen/search.dart';
+
 import '/screen/library_screen.dart';
-import '/screen/search_screen.dart';
-import '/screen/settings_screen.dart';
-import '/screen/notification_screen.dart';
+
+final GlobalKey _bottomNavigationKey = GlobalKey();
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.index});
 
   final int? index;
-  static const routeName = '/home';
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -39,8 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.settings), label: 'Notifications'),
     const NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
   ];
-  get _screens => const [
-        MangaScreen(),
+  get _screens => [
+        const MangaScreen(),
+        SearchScreen(),
+        LibraryScreen(),
       ];
 
   @override
@@ -51,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         body: _screens[_selectedIndex],
         bottomNavigationBar: NavigationBar(
-          elevation: 12,
+          key: _bottomNavigationKey,
+          elevation: 5,
           backgroundColor: AppColor.darkCyan,
           selectedIndex: _selectedIndex,
           destinations: _destinations,

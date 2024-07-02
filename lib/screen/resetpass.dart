@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:oms/components/toast.dart';
 
 class resetPassword extends StatefulWidget {
   const resetPassword({Key? key}) : super(key: key);
@@ -13,22 +14,21 @@ class _resetPasswordState extends State<resetPassword> {
   final TextEditingController _newPasswordController = TextEditingController();
 
   void _sendNewPassword(BuildContext context) async{
-      String newPassword = _newPasswordController.text;
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: newPassword);
-
+      try{
+        String newPassword = _newPasswordController.text;
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: newPassword);
+        showToast('Password reset email sent');
+      }
+      catch (e){
+        showToast('Error: $e');
+      }
   }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      
       child: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              'assets/login.png',
-            ),
-            fit: BoxFit.cover,
-          ),
-        ),
+        color: Color(0xFFF1DCD1),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
@@ -37,17 +37,9 @@ class _resetPasswordState extends State<resetPassword> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(
-                      top: 60.0,
-                    ),
-                    child: const Text(
-                      'RESET \n NOW',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40.0,
-                      ),
-                    ),
+                    width: 300,
+                    height: 300,
+                    child: Image.asset('assets/main_logo.png'),
                   ),
                 ],
               ),
@@ -82,7 +74,7 @@ class _resetPasswordState extends State<resetPassword> {
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(170.0, 90.0),
                                 minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: Colors.black,
+                                backgroundColor: Color(0xff80669d),
                                 shape: const StadiumBorder(),
                               ),
                               onPressed: () {
@@ -93,7 +85,10 @@ class _resetPasswordState extends State<resetPassword> {
                                     MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('RESET NOW'),
+                                  Text('RESET NOW',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),),
                                   Icon(
                                     Icons.refresh,
                                     color: Colors.white,
