@@ -7,7 +7,7 @@ import 'package:oms/API/accessToken.dart';
 Future<int> GetMangaRating( 
   {required final String query}
 ) async {
-  const String baseUrl = "https://api.mangadex.org";
+  final String baseUrl = "https://api.mangadex.org";
   final String? sessionToken = await GetToken();
   final response = await http.get(
       Uri.parse("$baseUrl/rating?manga[]=$query"),

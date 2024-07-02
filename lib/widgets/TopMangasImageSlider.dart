@@ -1,10 +1,8 @@
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:oms/Constants/appColor.dart';
 import 'package:oms/models/manga.dart';
-import 'package:oms/models/manga_details.dart';
-import 'package:oms/screen/chapter.dart';
-import 'package:oms/screen/manga_details_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class TopMangasImageSlider extends StatefulWidget {
@@ -80,13 +78,7 @@ class TopMangaPicture extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => MangaDetailsScreen(id: manga.node.id),
-            ),
-          );
-        },
+        onTap: () {},
         splashColor: Colors.white,
         child: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),

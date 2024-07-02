@@ -17,7 +17,7 @@ class AppTheme {
     ),
     colorScheme: const ColorScheme.dark()
         .copyWith(secondary: Colors.grey.shade900)
-        .copyWith(surface: Colors.black),
+        .copyWith(background: Colors.black),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white70,
@@ -43,6 +43,6 @@ class AppTheme {
         color: Colors.black,
       ),
     ),
-    colorScheme: const ColorScheme.light().copyWith(surface: Colors.white),
+    colorScheme: const ColorScheme.light().copyWith(background: Colors.white),
   );
 }

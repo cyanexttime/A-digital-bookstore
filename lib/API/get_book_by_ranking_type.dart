@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:oms/config/app_config.dart';
 
 import 'package:oms/models/manga.dart';
+import 'package:oms/models/manga_node.dart';
 
 Future<Iterable<Manga>> getMangaByRankingType({
   required String rankingType,

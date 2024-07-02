@@ -7,7 +7,7 @@ import 'package:oms/API/accessToken.dart';
 Future<List<dynamic>> GetMangaReadMarkers( 
   {required final String query}
 ) async {
-  const String baseUrl = "https://api.mangadex.org/manga";
+  final String baseUrl = "https://api.mangadex.org/manga";
   final String? sessionToken = await GetToken();
   final response = await http.get(
       Uri.parse("$baseUrl/$query/read"),
@@ -18,6 +18,7 @@ Future<List<dynamic>> GetMangaReadMarkers(
   
   if (response.statusCode == 200) {
     var decodedData = jsonDecode(response.body);
+    //print(decodedData['data']);
     return decodedData['data'];
   } else {
     print('Error: ${response.statusCode}');

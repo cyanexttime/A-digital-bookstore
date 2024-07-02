@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 
 class Constants {
   // Theme Related
@@ -9,6 +10,8 @@ class Constants {
   static const String isEnglish = 'is_english';
   static const String japanese = 'ja';
   static const String english = 'en';
-
+  static const String isJapanese = 'is_japanese';
+  static const String vietnamese = 'vie';
+  static const String isVietnamese = 'is_vietnamese';
   const Constants._();
 }

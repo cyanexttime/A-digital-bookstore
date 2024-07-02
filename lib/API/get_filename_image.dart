@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 Future<Map<String,dynamic>> GetFileNameImage({
   required String query,
 }) async {
-  const String baseUrl = "https://api.mangadex.org/cover";
+  final String baseUrl = "https://api.mangadex.org/cover";
   Map<String,dynamic> data = {};
   try{
     final response = await http.get(

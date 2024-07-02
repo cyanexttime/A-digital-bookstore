@@ -1,4 +1,8 @@
+
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:oms/common/styles/paddings.dart';
 import 'package:oms/view/FeaturedMangas.dart';
 import 'package:oms/widgets/TopMangasList.dart';
@@ -15,13 +19,19 @@ class _MangaScreenState extends State<MangaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ODESSEY'),
+        title: const Text('INTRODUCTION',
+        style: TextStyle(
+            
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),),
         actions: [
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.person),
           ),
         ],
+      backgroundColor: const Color(0xFF219F94),
       ),
       body: const SingleChildScrollView(
         child: Column(

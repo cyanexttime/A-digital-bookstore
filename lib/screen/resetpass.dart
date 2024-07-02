@@ -1,15 +1,17 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:oms/components/toast.dart';
 
-class resetPassword extends StatefulWidget {
-  const resetPassword({super.key});
+class ResetPassword extends StatefulWidget {
+  const ResetPassword({super.key});
 
   @override
   _resetPasswordState createState() => _resetPasswordState();
 }
 
-class _resetPasswordState extends State<resetPassword> {
+class _resetPasswordState extends State<ResetPassword> {
 
   final TextEditingController _newPasswordController = TextEditingController();
 
@@ -28,7 +30,7 @@ class _resetPasswordState extends State<resetPassword> {
     return SafeArea(
       
       child: Container(
-        color: const Color(0xFFF1DCD1),
+        color: Color(0xFFF1DCD1),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
@@ -36,7 +38,7 @@ class _resetPasswordState extends State<resetPassword> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  Container(
                     width: 300,
                     height: 300,
                     child: Image.asset('assets/main_logo.png'),
@@ -74,7 +76,7 @@ class _resetPasswordState extends State<resetPassword> {
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(170.0, 90.0),
                                 minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: const Color(0xff80669d),
+                                backgroundColor: Color(0xff80669d),
                                 shape: const StadiumBorder(),
                               ),
                               onPressed: () {

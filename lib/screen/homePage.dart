@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:oms/Constants/appColor.dart';
 import 'package:oms/screen/manga_screen.dart';
 import 'package:oms/screen/search.dart';
-
+import 'package:oms/screen/settings_screen.dart';
 import '/screen/library_screen.dart';
 
 final GlobalKey _bottomNavigationKey = GlobalKey();
@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.index});
 
   final int? index;
-
+  static const routeName = '/home';
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -36,14 +36,13 @@ class _HomeScreenState extends State<HomeScreen> {
     const NavigationDestination(icon: Icon(Icons.search), label: 'Search'),
     const NavigationDestination(
         icon: Icon(Icons.library_add), label: 'Library'),
-    const NavigationDestination(
-        icon: Icon(Icons.settings), label: 'Notifications'),
     const NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
   ];
   get _screens => [
         const MangaScreen(),
-        const searchScreen(),
-        const LibraryScreen(),
+        const SearchScreen(),
+        LibraryScreen(),
+        const SettingsScreen()
       ];
 
   @override

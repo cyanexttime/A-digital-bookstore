@@ -1,26 +1,27 @@
+// ignore_for_file: library_private_types_in_public_api, camel_case_types
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:oms/firebase_auth_implementation/firebase_auth_services.dart';
 
 
-class myRegister extends StatefulWidget {
-  const myRegister({super.key});
+class MyRegister extends StatefulWidget {
+  const MyRegister({super.key});
 
   @override
   _myRegisterState createState() => _myRegisterState();
 }
 
-class _myRegisterState extends State<myRegister> {
+class _myRegisterState extends State<MyRegister> {
   //
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   
   //ket noi toi dich vu firebae
-  final FirebaseAuthService _auth = FirebaseAuthService();
+  FirebaseAuthService _auth = new FirebaseAuthService();
 
-  @override
   void dispose() {
     _usernameController.dispose();
     _emailController.dispose();
@@ -57,7 +58,7 @@ class _myRegisterState extends State<myRegister> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Color(0xFFF1DCD1),
         ),
         child: Scaffold(
@@ -68,7 +69,7 @@ class _myRegisterState extends State<myRegister> {
                 onPressed: () {
                   Navigator.pushNamed(context, 'login');
                 },
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_back_ios_rounded,
                   color: Colors.black,
                 ),
@@ -82,7 +83,7 @@ class _myRegisterState extends State<myRegister> {
                   children: <Widget>[
                     Align(
                       alignment: Alignment.topCenter,
-                      child: SizedBox(
+                      child: Container(
                         width: 215,
                         height: 215,
                         child:Image.asset('assets/logo.png')
@@ -105,7 +106,7 @@ class _myRegisterState extends State<myRegister> {
                         decoration: InputDecoration(
                           labelText: 'Username',
                           fillColor: Colors.transparent,
-                          prefixIcon: const Icon(Icons.people_outline),
+                          prefixIcon: Icon(Icons.people_outline),
                           filled: true,
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -114,28 +115,28 @@ class _myRegisterState extends State<myRegister> {
                               )),
                         ),
                       ),
-                      const SizedBox(height: 30.0),
+                      SizedBox(height: 30.0),
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
                           fillColor: Colors.transparent,
-                          prefixIcon: const Icon(Icons.email_outlined),
+                          prefixIcon: Icon(Icons.email_outlined),
                           filled: true,
                           labelText: 'Email',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.white,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 30.0),
+                      SizedBox(height: 30.0),
                       TextField(
                         controller: _phoneController,
                         decoration: InputDecoration(
                           fillColor: Colors.transparent,
-                          prefixIcon: const Icon(Icons.phone),
+                          prefixIcon: Icon(Icons.phone),
                           filled: true,
                           labelText: 'Phone',
                           border: OutlineInputBorder(
@@ -146,18 +147,18 @@ class _myRegisterState extends State<myRegister> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 30.0),
+                      SizedBox(height: 30.0),
                       TextField(
                         controller: _passwordController,
                         obscureText: _isHidden,
                         decoration: InputDecoration(
                           fillColor: Colors.transparent,
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: Icon(Icons.lock),
                           suffixIcon: IconButton(
                             onPressed: _toggleVisibility,
                             icon: _isHidden
-                                ? const Icon(Icons.visibility)
-                                : const Icon(Icons.visibility_off),
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off),
                           ),
                           filled: true,
                           labelText: 'Password',
@@ -169,7 +170,7 @@ class _myRegisterState extends State<myRegister> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 30.0),
+                      SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -177,13 +178,13 @@ class _myRegisterState extends State<myRegister> {
                               style: ElevatedButton.styleFrom(
                                 maximumSize: const Size(170.0, 90.0),
                                 minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: const Color(0xff80669d),
+                                backgroundColor: Color(0xff80669d),
                                 shape: const StadiumBorder(),
                               ),
                               onPressed: () {
                                 _signUp(context);
                               },
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,7 +202,7 @@ class _myRegisterState extends State<myRegister> {
                               )),
                         ],
                       ),
-                      const SizedBox(height: 30.0),
+                      SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -209,7 +210,7 @@ class _myRegisterState extends State<myRegister> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'login');
                             },
-                            child: const Text(
+                            child: Text(
                               'Login',
                               style: TextStyle(color: Colors.black),
                             ),
@@ -218,7 +219,7 @@ class _myRegisterState extends State<myRegister> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'forgot');
                             },
-                            child: const Text(
+                            child: Text(
                               'Forgot password?',
                               style: TextStyle(color: Colors.black),
                             ),

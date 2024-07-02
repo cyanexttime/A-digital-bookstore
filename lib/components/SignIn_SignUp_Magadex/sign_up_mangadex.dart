@@ -7,8 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 
 class RegisterFormDialog extends StatefulWidget {
-  const RegisterFormDialog({super.key});
-
   @override
   _RegisterFormDialogState createState() => _RegisterFormDialogState();
 }
@@ -25,8 +23,8 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Register failed'),
-            content: const Text('Please fill in all fields'),
+            title: Text('Register failed'),
+            content: Text('Please fill in all fields'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -36,7 +34,7 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
                   _secretIdController.text = '';
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: Text('OK'),
               ),
             ],
           );
@@ -65,25 +63,25 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
     return RichText(
       text:TextSpan(
         text: "You can get your Client ID and Secret ID by registering an account on Mangadex website. For more information, please visit",
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(color: Colors.black),
         children: [
-          const TextSpan(
+          TextSpan(
             text: "\nMangadex registration link: ",
           ),
           TextSpan(
             text: "https://mangadex.org/",
-            style: const TextStyle(decoration: TextDecoration.underline,color: Colors.blue),
+            style: TextStyle(decoration: TextDecoration.underline,color: Colors.blue),
             recognizer: TapGestureRecognizer()
               ..onTap = () async {
                  launchUrl(Uri.parse("https://mangadex.org/"));
               },
           ),
-          const TextSpan(
+          TextSpan(
             text: "\nApiclient registration link: ",
           ),
           TextSpan(
             text: "https://mangadex.org/",
-            style: const TextStyle(decoration: TextDecoration.underline,color: Colors.blue),
+            style: TextStyle(decoration: TextDecoration.underline,color: Colors.blue),
             recognizer: TapGestureRecognizer()
               ..onTap = () async {
                  launchUrl(Uri.parse("https://mangadex.org/settings"));
@@ -115,14 +113,14 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
               width: double.infinity,
               height: 50,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.deepOrange,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Register',
                 style: TextStyle(
                   fontSize: 20,
@@ -131,12 +129,12 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Decrepsion(),
-            const SizedBox(height: 5),
+            SizedBox(height: 5),
             TextField(
               controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
+              decoration: InputDecoration(labelText: 'Username'),
             ),
             TextField(
               controller: _passwordController,
@@ -145,21 +143,21 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
                 suffixIcon: IconButton(
                   onPressed: _toggleVisibility,
                   icon: _isHidden
-                      ? const Icon(Icons.visibility_off)
-                      : const Icon(Icons.visibility),
+                      ? Icon(Icons.visibility_off)
+                      : Icon(Icons.visibility),
                 ),
                 ),
               obscureText: _isHidden,
             ),
             TextField(
               controller: _clientIdController,
-              decoration: const InputDecoration(labelText: 'Client ID'),
+              decoration: InputDecoration(labelText: 'Client ID'),
             ),
             TextField(
               controller: _secretIdController,
-              decoration: const InputDecoration(labelText: 'Secret ID'),
+              decoration: InputDecoration(labelText: 'Secret ID'),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -168,7 +166,7 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
                     // Handle Cancel action
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Cancel'),
+                  child: Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -180,7 +178,7 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
                     // Implement registration logic here
                     await IsEmptyAccount(username, password, clientId, secretId);
                   },
-                  child: const Text('Register') ,
+                  child: Text('Register') ,
                 ),
               ],
             ),
