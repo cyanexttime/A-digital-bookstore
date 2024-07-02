@@ -3,12 +3,10 @@ import 'package:oms/API/get_a_manga_reading_status.dart';
 import 'package:oms/API/post_manga_reading_status.dart';
 import 'package:oms/screen/chapter.dart';
 
-
-
 class MessageBoxScreen extends StatefulWidget {
   final String mangaID;
 
-  MessageBoxScreen({required this.mangaID});
+  const MessageBoxScreen({super.key, required this.mangaID});
 
   @override
   _MessageBoxScreenState createState() => _MessageBoxScreenState();
@@ -32,7 +30,6 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
     "completed": "Completed",
     "re_reading": "Re-Reading",
   };
-  
   var selectedOption = 'None';
 
   @override
@@ -74,7 +71,7 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
                 color: Colors.black87,
               ),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             const Text(
               'Choose the option you want to add to the library (Reading status)',
               style: TextStyle(
@@ -82,7 +79,7 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
                 color: Colors.black54,
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             DropdownButton(
               value: selectedOption,
               onChanged: (newValue) {
@@ -104,7 +101,7 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -116,7 +113,7 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
                         print("Success");
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: Text('Failed to update reading status'),
                             duration: Duration(seconds: 2),
                           ),
@@ -125,7 +122,7 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
                     });
                     Navigator.of(context).pop();
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             ),

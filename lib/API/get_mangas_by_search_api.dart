@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -9,7 +8,7 @@ Future<List<dynamic>> getMangasBySearchApi({
   required String query,
 }) async {
 
-  final String baseUrl = "https://api.mangadex.org";
+  const String baseUrl = "https://api.mangadex.org";
   final response = await http.get(
     Uri.parse('$baseUrl/manga?title=$query')
   ).timeout(const Duration(seconds: 5));

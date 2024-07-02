@@ -1,10 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:oms/API/accessToken.dart';
 
 final readingStatus = {
@@ -19,7 +16,7 @@ final readingStatus = {
 
 Future<Map<String, dynamic>> GetALLMangaReadingStatus(
     {required final String query}) async {
-  final String baseUrl = "https://api.mangadex.org/manga";
+  const String baseUrl = "https://api.mangadex.org/manga";
   final String? sessionToken = await GetToken();
   if (query == "All") {
     final response = await http.get(

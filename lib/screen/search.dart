@@ -1,14 +1,7 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:oms/API/accessToken.dart';
-import 'package:oms/API/authencation.dart';
 import 'package:oms/API/get_filename_image.dart';
-import 'package:oms/API/get_list_apiclient.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
-import 'package:oms/Constants/appColor.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -17,7 +10,8 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClientMixin {
+class _SearchScreenState extends State<SearchScreen>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
   List dataList = [];
   Map<String, String?> imageUrlMap = {};
@@ -43,27 +37,26 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
     // Your implementation of ListAPI goes here.
   }
 
-Future<void> loadAnimes(String value) async {
-  final data = await getMangasBySearchApi(query: value);
-  final newImageUrlMap = <String, String>{};
+  Future<void> loadAnimes(String value) async {
+    final data = await getMangasBySearchApi(query: value);
+    final newImageUrlMap = <String, String>{};
 
-  for (var manga in data) {
-    final coverID = getCoverID(manga['relationships']);
-    if (coverID != null) {
-      final imageData = await GetFileNameImage(query: coverID);
-      if (imageData.isNotEmpty) {
-        final imageUrl = imageData['data']['attributes']['fileName'];
-        newImageUrlMap[coverID] = imageUrl;
+    for (var manga in data) {
+      final coverID = getCoverID(manga['relationships']);
+      if (coverID != null) {
+        final imageData = await GetFileNameImage(query: coverID);
+        if (imageData.isNotEmpty) {
+          final imageUrl = imageData['data']['attributes']['fileName'];
+          newImageUrlMap[coverID] = imageUrl;
+        }
       }
     }
+
+    setState(() {
+      dataList = data;
+      imageUrlMap = newImageUrlMap;
+    });
   }
-
-  setState(() {
-    dataList = data;
-    imageUrlMap = newImageUrlMap;
-  });
-}
-
 
   String? getCoverID(List<dynamic> relationships) {
     for (var relationship in relationships) {
@@ -101,82 +94,81 @@ Future<void> loadAnimes(String value) async {
           borderRadius: BorderRadius.circular(40),
         ),
         hintText: 'Search manga',
-        hintStyle: const TextStyle(color: Color(0xff5D4242)),
         prefixIcon: const Icon(Icons.search, color: Color(0xff5D4242)),
       ),
     );
   }
 
- Widget searchResults() {
-  return ListView.builder(
-    controller: _scrollController,
-    itemCount: dataList.length,
-    itemBuilder: (context, index) {
-      final manga = dataList[index];
-      final coverID = getCoverID(manga['relationships']);
-      final ID = manga['id'];
-      final title = manga['attributes']['title']['en'];
-      final status = manga['attributes']['status'];
-      final imageUrl = coverID != null && imageUrlMap.containsKey(coverID)
-          ? 'https://uploads.mangadex.org/covers/$ID/${imageUrlMap[coverID]}.512.jpg'
-          : null;
+  Widget searchResults() {
+    return ListView.builder(
+      controller: _scrollController,
+      itemCount: dataList.length,
+      itemBuilder: (context, index) {
+        final manga = dataList[index];
+        final coverID = getCoverID(manga['relationships']);
+        final ID = manga['id'];
+        final title = manga['attributes']['title']['en'];
+        final status = manga['attributes']['status'];
+        final imageUrl = coverID != null && imageUrlMap.containsKey(coverID)
+            ? 'https://uploads.mangadex.org/covers/$ID/${imageUrlMap[coverID]}.512.jpg'
+            : null;
 
-      return Column(
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, 'chapter', arguments: ID);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(3),
-              child: Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Container(
-                  margin: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      if (imageUrl != null)
-                        Container(
-                          height: 130,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(imageUrl),
-                              fit: BoxFit.fitHeight,
+        return Column(
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, 'chapter', arguments: ID);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(3),
+                child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Container(
+                    margin: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        if (imageUrl != null)
+                          Container(
+                            height: 130,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: CachedNetworkImageProvider(imageUrl),
+                                fit: BoxFit.fitHeight,
+                              ),
                             ),
                           ),
+                        const SizedBox(height: 10),
+                        Text(
+                          title ?? 'No title',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      const SizedBox(height: 10),
-                      Text(
-                        title ?? 'No title',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        const SizedBox(height: 5),
+                        Text(
+                          status ?? 'Unknown status',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        status ?? 'Unknown status',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      );
-    },
-  );
-}
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,13 +183,12 @@ Future<void> loadAnimes(String value) async {
         title: const Text(
           'SEARCH',
           style: TextStyle(
-            
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: const Color(0xFF219F94),
-        elevation: 10,
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -217,5 +208,4 @@ Future<void> loadAnimes(String value) async {
       ),
     );
   }
-
 }

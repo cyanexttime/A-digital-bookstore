@@ -3,24 +3,23 @@ import 'package:flutter/material.dart';
 
 import '../firebase_auth_implementation/firebase_auth_services.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 
 class MyLogin extends StatefulWidget {
-  const MyLogin({Key? key}) : super(key: key);
+  const MyLogin({super.key});
   @override
   _MyLoginState createState() => _MyLoginState();
 }
 
 class _MyLoginState extends State<MyLogin> {
 //khoi tao
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   
   //ket noi toi dich vu firebae
-  final FirebaseAuthService _auth = new FirebaseAuthService();
+  final FirebaseAuthService _auth = FirebaseAuthService();
 
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -53,7 +52,7 @@ class _MyLoginState extends State<MyLogin> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color(0xFFF1DCD1),
         ),
         child: Scaffold(
@@ -65,7 +64,7 @@ class _MyLoginState extends State<MyLogin> {
                   children: <Widget>[
                     Center
                     (
-                      child:Container(
+                      child:SizedBox(
                         width: 250,
                         height: 250,
                         child:Image.asset('assets/logo.png')
@@ -88,7 +87,7 @@ class _MyLoginState extends State<MyLogin> {
                         controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: const Icon(Icons.email_outlined),
                           fillColor: Colors.grey.shade100,
                           filled: true,
                           border: OutlineInputBorder(
@@ -96,7 +95,7 @@ class _MyLoginState extends State<MyLogin> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       TextFormField(
                         controller: _passwordController,
                         validator: (value) {
@@ -105,17 +104,18 @@ class _MyLoginState extends State<MyLogin> {
                           } else if (value.length <= 6) {
                             return 'Password must be greater than 6 digits';
                           }
+                          return null;
                         },
                         obscureText: _isHidden,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           fillColor: Colors.grey.shade100,
-                          prefixIcon: Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
                             onPressed: _toggleVisibility,
                             icon: _isHidden
-                                ? Icon(Icons.visibility_off)
-                                : Icon(Icons.visibility),
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                           ),
                           filled: true,
                           // hintText: 'Password',
@@ -124,21 +124,21 @@ class _MyLoginState extends State<MyLogin> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                maximumSize: Size(170.0, 90.0),
-                                minimumSize: Size(170.0, 60.0),
-                                backgroundColor: Color(0xff80669d),
-                                shape: StadiumBorder(),
+                                maximumSize: const Size(170.0, 90.0),
+                                minimumSize: const Size(170.0, 60.0),
+                                backgroundColor: const Color(0xff80669d),
+                                shape: const StadiumBorder(),
                               ),
                               onPressed: (){
                                 _signIn(context);
                               },
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 //crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,7 +156,7 @@ class _MyLoginState extends State<MyLogin> {
                               )),
                         ],
                       ),
-                      SizedBox(height: 30.0),
+                      const SizedBox(height: 30.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -164,7 +164,7 @@ class _MyLoginState extends State<MyLogin> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'register');
                             },
-                            child: Text(
+                            child: const Text(
                               'Register',
                               style: TextStyle(color: Colors.black),
                             ),
@@ -173,7 +173,7 @@ class _MyLoginState extends State<MyLogin> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'forgot');
                             },
-                            child: Text(
+                            child: const Text(
                               'Forgot password?',
                               style: TextStyle(color: Colors.black),
                             ),
