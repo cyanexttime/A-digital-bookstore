@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:oms/Constants/appColor.dart';
 import 'package:oms/screen/manga_screen.dart';
 import 'package:oms/screen/search.dart';
-
+import 'package:oms/screen/settings_screen.dart';
 import '/screen/library_screen.dart';
 
 final GlobalKey _bottomNavigationKey = GlobalKey();
@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.index});
 
   final int? index;
-
+  static const routeName = '/home';
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -40,7 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
   get _screens => [
         const MangaScreen(),
         const SearchScreen(),
-        const LibraryScreen(),
+        LibraryScreen(),
+        const SettingsScreen()
       ];
 
   @override

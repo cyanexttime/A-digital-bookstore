@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:oms/API/authencation.dart';
 import 'package:oms/components/api_variables.dart';
+import 'package:oms/config/app_config.dart';
 
 class LoginFormDialog extends StatefulWidget {
   @override
-  const LoginFormDialog({super.key});
-  @override
+  const LoginFormDialog({Key? key}) : super(key: key);
   State<LoginFormDialog> createState() => _LoginFormDialogState();
 }
 
@@ -35,8 +36,13 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
           apiVariables.username = user;
           apiVariables.password = password;
           apiVariables.isLogin = true;
-          return true;
-                }
+          if (apiVariables.refreshToken != null) {
+            return true;
+          } else {
+            print("failllll");
+            return false;
+          }
+        }
       } else {
         print("fail dang ki");
         //in gi do
@@ -92,14 +98,14 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                 width: double.infinity,
                 height: 40,
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.deepOrange,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Sign In to Mangadex Account',
                   style: TextStyle(
                     fontSize: 16,
@@ -108,8 +114,8 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              const Text(
+              SizedBox(height: 10),
+              Text(
                 'Please enter your username and password of your Mangadex account to login.',
                 style: TextStyle(
                   fontSize: 14,
@@ -118,7 +124,7 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
               ),
               TextField(
                 controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'Username'),
+                decoration: InputDecoration(labelText: 'Username'),
               ),
               TextField(
                 obscureText: _isHidden,
@@ -128,8 +134,8 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                   suffixIcon: IconButton(
                     onPressed: _toggleVisibility,
                     icon: _isHidden
-                        ? const Icon(Icons.visibility_off)
-                        : const Icon(Icons.visibility),
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility),
                   ),
                 ),
               ),
@@ -138,7 +144,7 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                   // Handle register action here
                   Navigator.pushNamed(context, 'signUpMangadex');
                 },
-                child: const Text(
+                child: Text(
                   'Register here',
                   style: TextStyle(color: Colors.deepOrange),
                 ),
@@ -151,7 +157,7 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                       // Handle Cancel action
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Cancel'),
+                    child: Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -168,8 +174,8 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Login failed'),
-                              content: const Text(
+                              title: Text('Login failed'),
+                              content: Text(
                                   'Please check your username and password again'),
                               actions: [
                                 TextButton(
@@ -178,7 +184,7 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                                     _passwordController.text = '';
                                     Navigator.of(context).pop();
                                   },
-                                  child: const Text('OK'),
+                                  child: Text('OK'),
                                 ),
                               ],
                             );
@@ -186,7 +192,7 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                         );
                       }
                     },
-                    child: const Text('Login'),
+                    child: Text('Login'),
                   ),
                 ],
               ),

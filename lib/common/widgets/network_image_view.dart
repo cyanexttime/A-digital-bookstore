@@ -8,6 +8,8 @@ class NetworkImageView extends StatelessWidget {
 
   final String url;
 
+  static const routeName = '/network-image-view';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

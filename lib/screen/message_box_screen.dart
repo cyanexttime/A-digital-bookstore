@@ -30,7 +30,6 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
     "completed": "Completed",
     "re_reading": "Re-Reading",
   };
-
   var selectedOption = 'None';
 
   @override

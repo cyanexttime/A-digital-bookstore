@@ -1,6 +1,13 @@
+// ignore_for_file: library_private_types_in_public_api
+
+import 'dart:ffi';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:oms/API/get_all_reading_status.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/Constants/appColor.dart';
 import 'package:oms/components/api_variables.dart';
@@ -44,7 +51,6 @@ class _LibraryScreenState extends State<LibraryScreen>
         });
         return;
       }
-
       setState(() {
         dataReadingStatus['statuses'].keys.forEach((mangaID) {
           _futures[mangaID] = _fetchMangaData(mangaID);
@@ -78,7 +84,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: AppColor.darkCyan,
+        backgroundColor: const Color(0xFF219F94),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -131,7 +137,7 @@ class _LibraryScreenState extends State<LibraryScreen>
             future: _futures[mangaID],
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -154,10 +160,10 @@ class _LibraryScreenState extends State<LibraryScreen>
                               top: Radius.circular(10)),
                           child: CachedNetworkImage(
                             imageUrl: imageUrl,
-                            placeholder: (context, url) => const Center(
-                                child: CircularProgressIndicator()),
+                            placeholder: (context, url) =>
+                                Center(child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                                Icon(Icons.error),
                             fit: BoxFit.fitHeight,
                           ),
                         ),
@@ -196,7 +202,7 @@ class _LibraryScreenState extends State<LibraryScreen>
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          child: const Text('Read'),
+                          child: Text('Read'),
                         ),
                       ),
                     ],

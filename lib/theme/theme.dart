@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AppTheme {
+class Apptheme {
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.blueGrey.shade900,
+    scaffoldBackgroundColor: Colors.white,
     primaryColor: Colors.white,
     shadowColor: Colors.black54,
-    iconTheme: const IconThemeData(color: Colors.white),
+    iconTheme: const IconThemeData (color: Colors.white),
     primaryIconTheme: const IconThemeData(
-      color: Colors.white,
+      color: Colors.white
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(
@@ -16,8 +16,8 @@ class AppTheme {
       ),
     ),
     colorScheme: const ColorScheme.dark()
-        .copyWith(secondary: Colors.grey.shade900)
-        .copyWith(background: Colors.black),
+      .copyWith(secondary: Colors.grey.shade900)
+      .copyWith(background: Colors.black),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Colors.white,
       unselectedItemColor: Colors.white70,
@@ -26,13 +26,14 @@ class AppTheme {
       ),
       unselectedIconTheme: IconThemeData(
         color: Colors.white70,
-      ),
+      )
     ),
   );
 
   static final lightTheme = ThemeData(
+    // scaffoldBackgroundColor: lightThemeWhiteBackground,
     primaryColor: Colors.black,
-    shadowColor: Colors.white54,
+    shadowColor: Colors.white,
     iconTheme: const IconThemeData(color: Colors.black),
     primaryIconTheme: const IconThemeData(
       color: Colors.black,
@@ -43,6 +44,7 @@ class AppTheme {
         color: Colors.black,
       ),
     ),
-    colorScheme: const ColorScheme.light().copyWith(background: Colors.white),
+    colorScheme: const ColorScheme.light()
+        .copyWith(background: Colors.white),
   );
 }

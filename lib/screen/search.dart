@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:oms/API/accessToken.dart';
+import 'package:oms/API/authencation.dart';
 import 'package:oms/API/get_filename_image.dart';
 import 'package:oms/API/get_mangas_by_search_api.dart';
 import 'package:oms/Constants/appColor.dart';
@@ -174,19 +177,22 @@ class _SearchScreenState extends State<SearchScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context); // This line ensures the state is kept alive
+    final Color backgroundColor =
+        Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color(0xFFF1DCD1);
     return Scaffold(
-      backgroundColor: const Color(0xFFF1DCD1),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Text(
           'SEARCH',
           style: TextStyle(
-            color: Color(0xff150B0B),
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: AppColor.darkCyan,
-        elevation: 5,
+        backgroundColor: const Color(0xFF219F94),
+        elevation: 10,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

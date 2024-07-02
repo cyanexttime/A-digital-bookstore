@@ -1,16 +1,9 @@
-
 import 'dart:convert';
-
-
-
-
 
 import 'package:http/http.dart' as http;
 import 'package:oms/API/accessToken.dart';
 
-
-
-Future<String> PostMangaUnReadMarkers( {
+Future<String> PostMangaUnReadMarkers({
   required String idmanga,
   required String idchapter,
   bool updateHistory = true,
@@ -24,15 +17,14 @@ Future<String> PostMangaUnReadMarkers( {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode({
-       'chapterIdsUnread': [idchapter],
+      'chapterIdsUnread': [idchapter],
     }),
   );
   if (response.statusCode == 200) {
-    print("urs" );
-      return (response.statusCode).toString();
-  }
-  else {
-      return (response.statusCode).toString();
+    print("urs");
+    return (response.statusCode).toString();
+  } else {
+    return (response.statusCode).toString();
   }
 }
   // Add a return statement h

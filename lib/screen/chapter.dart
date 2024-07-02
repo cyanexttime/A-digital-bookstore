@@ -1,6 +1,12 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:oms/API/delete_manga_rating.dart';
 import 'package:oms/API/follow_manga.dart';
 import 'package:oms/API/get_author.dart';
@@ -10,10 +16,12 @@ import 'package:oms/API/get_manga_info.dart';
 import 'package:oms/API/get_volume_and_chapters.dart';
 import 'package:oms/API/get_manga_rating.dart';
 import 'package:oms/API/get_manga_read_markers.dart';
+import 'package:oms/API/get_statistics.dart';
 import 'package:oms/API/post_manga_rating.dart';
 import 'package:oms/API/post_manga_read_markers.dart';
 import 'package:oms/API/post_manga_unread_markers.dart';
 import 'package:oms/API/unfollow_manga.dart';
+import 'package:oms/API/post_manga_reading_status.dart';
 import 'package:oms/Constants/appColor.dart';
 import 'package:oms/components/SignIn_SignUp_Magadex/sign_in_magadex.dart';
 import 'package:oms/components/api_variables.dart';
@@ -21,11 +29,15 @@ import 'package:oms/components/statistics.dart';
 import 'package:oms/models/items_model.dart';
 import 'package:oms/provider/bookmark_model.dart';
 import 'package:oms/provider/chapter_model.dart';
+import 'package:oms/screen/bookmarks_page.dart';
+import 'package:oms/screen/homePage.dart';
 import 'package:oms/screen/message_box_screen.dart';
+import 'package:oms/models/manga.dart';
 import 'package:provider/provider.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class Chapter extends StatefulWidget {
-  const Chapter({super.key});
+  const Chapter({Key? key}) : super(key: key);
 
   @override
   State<Chapter> createState() => _ChapterState();
@@ -117,18 +129,18 @@ class _ChapterState extends State<Chapter> {
   }
 
   Future<void> LoadMangaRating(String value) async {
-    final rating = await GetMangaRating(query: value);
+    final rating = await GetMangaRating(query: '$value');
     setState(() {
-      ratingValue = rating.toString() ?? '0';
+      ratingValue = rating?.toString() ?? '0';
     });
   }
 
   Future<void> LoadAuthor(String value) async {
-    if (value.trim().isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       print('Invalid author ID');
       return;
     }
-    final data = await GetAuthor(query: value);
+    final data = await GetAuthor(query: '$value');
     print(data);
     if (mounted) {
       setState(() {
@@ -172,7 +184,7 @@ class _ChapterState extends State<Chapter> {
   }
 
   Future<void> LoadMangaInfo(String value) async {
-    final dataMangaInfo = await GetMangaInfo(query: value);
+    final dataMangaInfo = await GetMangaInfo(query: '$value');
     if (mounted) {
       setState(() {
         dataManga = dataMangaInfo;
@@ -212,10 +224,10 @@ class _ChapterState extends State<Chapter> {
       return CachedNetworkImage(
         imageUrl: imageUrl,
         placeholder: (context, url) =>
-            const Center(child: CircularProgressIndicator()),
+            Center(child: CircularProgressIndicator()),
       );
     } else {
-      return const Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator());
     }
   }
 
@@ -240,7 +252,8 @@ class _ChapterState extends State<Chapter> {
   }
 
   Widget ShowVolumes() {
-    if (dataVolumesAndChapters['volumes'] == null) {
+    if (dataVolumesAndChapters == null ||
+        dataVolumesAndChapters['volumes'] == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -359,7 +372,7 @@ class _ChapterState extends State<Chapter> {
 
   Widget buildMangaInfo() {
     if (dataManga.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator());
     }
 
     return Column(
@@ -370,8 +383,7 @@ class _ChapterState extends State<Chapter> {
                 color: Colors.black,
                 fontSize: 22,
                 fontWeight: FontWeight.bold)),
-        Text(japanese,
-            style: const TextStyle(color: Colors.black, fontSize: 15)),
+        Text(japanese, style: TextStyle(color: Colors.black, fontSize: 15)),
         Text(author,
             style: const TextStyle(
               color: Colors.black,
@@ -420,10 +432,10 @@ class _ChapterState extends State<Chapter> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                  foregroundColor: const Color(0xFF219F94),
-                  fixedSize: const Size(150, 50),
+                  foregroundColor: Color(0xFF219F94),
+                  fixedSize: Size(150, 50),
                   backgroundColor: Colors.white,
-                  shadowColor: const Color(0xFF219F94),
+                  shadowColor: Color(0xFF219F94),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -431,7 +443,7 @@ class _ChapterState extends State<Chapter> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   )),
-              child: const Text('Add to library'),
+              child: Text('Add to library'),
             ),
           ),
           const SizedBox(width: 10),
@@ -443,14 +455,14 @@ class _ChapterState extends State<Chapter> {
               ),
               alignment: Alignment.centerLeft,
               transformAlignment: Alignment.bottomRight,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: GestureDetector(
                 onTap: () async {
                   if (!apiVariables.isLogin) {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LoginFormDialog(),
+                          builder: (context) => LoginFormDialog(),
                         )).then(
                       (value) => _handleLoginChange(),
                     );
@@ -492,11 +504,11 @@ class _ChapterState extends State<Chapter> {
       onTap: () {},
       child: Row(
         children: [
-          const Icon(Icons.star, color: Colors.amber, size: 30),
-          const SizedBox(width: 3),
+          Icon(Icons.star, color: Colors.amber, size: 30),
+          SizedBox(width: 3),
           Text(
             item,
-            style: const TextStyle(fontSize: 30),
+            style: TextStyle(fontSize: 30),
           )
         ],
       ));
@@ -505,7 +517,7 @@ class _ChapterState extends State<Chapter> {
   Widget build(BuildContext context) {
     bookmarkBloc = Provider.of<BookmarkBloc>(context);
     return Scaffold(
-        backgroundColor: const Color(0xFFF1DCD1),
+        backgroundColor: Color(0xFFF1DCD1),
         appBar: AppBar(
             title: const Text(
               'Chapters',
@@ -531,7 +543,7 @@ class _ChapterState extends State<Chapter> {
             ],
             backgroundColor: AppColor.darkCyan),
         body: Container(
-            padding: const EdgeInsets.all(13),
+            padding: EdgeInsets.all(13),
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -540,7 +552,8 @@ class _ChapterState extends State<Chapter> {
                       Expanded(
                         flex: 2, // Ảnh sẽ chiếm 2/3 không gian
                         child: Container(
-                          margin: const EdgeInsets.all(10),
+                          margin: EdgeInsets.all(10),
+                          child: buildImage(),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black),
                             boxShadow: [
@@ -548,12 +561,11 @@ class _ChapterState extends State<Chapter> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 5,
                                 blurRadius: 7,
-                                offset: const Offset(
-                                    0, 3), // changes position of shadow
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
                               ),
                             ],
                           ),
-                          child: buildImage(),
                         ),
                       ),
                       Expanded(
@@ -570,7 +582,7 @@ class _ChapterState extends State<Chapter> {
                   buildSnackBar(context),
                   const SizedBox(height: 10),
                   Text(description,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.black,
                         fontSize: 15,
                       )),

@@ -16,18 +16,20 @@ class _BookmarksPageState extends State<BookmarksPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF1DCD1),
       appBar: AppBar(
-        title: const Text("Bookmarks",
-         style: TextStyle(
+        title: const Text(
+          "Bookmarks",
+          style: TextStyle(
             color: Color(0xff150B0B),
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor:AppColor.darkCyan, // Thay đổi màu sắc AppBar
+        backgroundColor: AppColor.darkCyan, // Thay đổi màu sắc AppBar
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0), // Thêm padding cho toàn bộ nội dung
+          padding:
+              const EdgeInsets.all(8.0), // Thêm padding cho toàn bộ nội dung
           child: Column(
             children: [
               ListView.builder(
@@ -36,9 +38,11 @@ class _BookmarksPageState extends State<BookmarksPage> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0), // Thêm khoảng cách giữa các mục
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 8.0), // Thêm khoảng cách giữa các mục
                     child: ListTile(
-                      leading: const Icon(Icons.bookmark, color: Color(0xFF219F94)), // Thêm biểu tượng bookmark
+                      leading: const Icon(Icons.bookmark,
+                          color: Color(0xFF219F94)), // Thêm biểu tượng bookmark
                       title: Text(
                         "Chapter ${bookmarkBloc.items[index].nameChapter}",
                         style: const TextStyle(fontWeight: FontWeight.bold),
@@ -47,9 +51,11 @@ class _BookmarksPageState extends State<BookmarksPage> {
                         "Translation Language:${bookmarkBloc.items[index].transLanguage ?? ''}", // Bạn có thể thêm thông tin phụ
                         style: TextStyle(color: Colors.grey[600]),
                       ),
-                      trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey[600]), // Biểu tượng mũi tên
+                      trailing: Icon(Icons.arrow_forward_ios,
+                          color: Colors.grey[600]), // Biểu tượng mũi tên
                       onTap: () {
-                        Navigator.pushNamed(context, 'chapterContent', arguments: bookmarkBloc.items[index].chapterID);
+                        Navigator.pushNamed(context, 'chapterContent',
+                            arguments: bookmarkBloc.items[index].chapterID);
                       },
                     ),
                   );
