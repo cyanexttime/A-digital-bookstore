@@ -2,254 +2,217 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:oms/API/get_all_reading_status.dart';
 import 'package:oms/API/get_manga_info.dart';
+import 'package:oms/Constants/appColor.dart';
 import 'package:oms/components/api_variables.dart';
 import 'package:oms/components/get_coverID.dart';
 import 'package:oms/components/get_image.dart';
-// Add this line to import the 'Provider' class
-
-String query = '';
-List dataList = [];
-Map<String, dynamic> dataReadingStatus = {};
-final Map<String, Future<List<dynamic>>> _futures = {};
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
+
   @override
-  State<LibraryScreen> createState() => _LibraryScreenState();
+  _LibraryScreenState createState() => _LibraryScreenState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen> {
+class _LibraryScreenState extends State<LibraryScreen>
+    with AutomaticKeepAliveClientMixin {
+  Map<String, dynamic> dataReadingStatus = {};
+  final Map<String, Future<List<dynamic>>> _futures = {};
+  String selectedValue = 'All';
+  bool isLoading = false;
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      CheckLogin();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => CheckLogin());
   }
 
   Future<void> CheckLogin() async {
-    if (apiVariables.isLogin == false) {
+    if (!apiVariables.isLogin) {
       Navigator.pushNamed(context, 'signInMangadex');
     } else {
-      dataReadingStatus = await GetALLMangaReadingStatus(query: 'All');
+      setState(() {
+        isLoading = true;
+      });
+      dataReadingStatus = await GetALLMangaReadingStatus(query: selectedValue);
+      if (dataReadingStatus.isEmpty) {
+        setState(() {
+          isLoading = false;
+          print("da vao ");
+        });
+        return;
+      }
+
+      setState(() {
+        dataReadingStatus['statuses'].keys.forEach((mangaID) {
+          _futures[mangaID] = _fetchMangaData(mangaID);
+        });
+        isLoading = false;
+      });
     }
   }
 
-  List<String> dropDownMenuItems = [
-    'All',
-    'Reading',
-    'Completed',
-    'Dropped',
-    'Plan to read',
-    'Re Reading',
-    'On Hold'
-  ];
-  String selectedValue = 'All';
-
-  Widget Results(String value) {
-    if (apiVariables.isLogin != true) {
-      print("here");
-      return const Center(child: Text("Please Login Mangadex Account"));
-    } else {
-      return FutureBuilder<dynamic>(
-        future: GetALLMangaReadingStatus(query: value),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            if (snapshot.data != null) {
-              Map<String, dynamic> dataReadingStatus = snapshot.data;
-              Map<String, dynamic>? statuses = dataReadingStatus['statuses'];
-              if (statuses == null) {
-                return const Center(
-                    child: Text('No Manga', style: TextStyle(fontSize: 20)));
-              }
-              List<MapEntry<String, dynamic>> mangaEntries =
-                  statuses.entries.toList();
-              int countMangaId = dataReadingStatus['statuses'].length;
-              print(dataReadingStatus);
-              print(countMangaId);
-              return ListView.builder(
-                  addAutomaticKeepAlives: true,
-                  itemCount: countMangaId,
-                  itemBuilder: (context, index) {
-                    final mangaEntry = mangaEntries.elementAt(index);
-                    final mangaID = mangaEntry.key;
-
-                    if (!_futures.containsKey(mangaID)) {
-                      _futures[mangaID] = () async {
-                        Map<String, dynamic> mangaInfo =
-                            await GetMangaInfo(query: mangaID);
-                        var coverID = getCoverID(
-                            mangaInfo['data']['relationships']);
-                        var getImageString = await GetImage(query: coverID);
-                        var author =
-                            mangaInfo['data']['relationships'][0]['id'] ?? '';
-                        var title = mangaInfo['data']['attributes']['title']
-                                ['en'] ??
-                            '';
-                        var description = mangaInfo['data']['attributes']
-                                ['description']['en'] ??
-                            '';
-
-                        return [mangaInfo, getImageString, title, description];
-                      }();
-                    }
-                    return FutureBuilder<List<dynamic>>(
-                      future: _futures[mangaID],
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          String imageUrl =
-                              'https://uploads.mangadex.org/covers/$mangaID/${snapshot.data?[1]}';
-                          return Container(
-                            width: double.infinity,
-                            color: Colors.blueAccent,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 100,
-                                        height: 200,
-                                        child: CachedNetworkImage(
-                                          key: ValueKey(imageUrl),
-                                          imageUrl: imageUrl,
-                                          placeholder: (context, url) => const Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              snapshot.data?[2],
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Text(
-                                              snapshot.data?[3],
-                                              maxLines: 3,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Text(
-                                              'Status: ${mangaEntry.value}',
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pushNamed(
-                                                    context, 'chapter',
-                                                    arguments: mangaID);
-                                              },
-                                              child: const Text('Read'),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    );
-                  });
-            } else {
-              return const Text('No Manga Found');
-            }
-          }
-        },
-      );
-    }
+  Future<List<dynamic>> _fetchMangaData(String mangaID) async {
+    final mangaInfo = await GetMangaInfo(query: mangaID);
+    final coverID = getCoverID(mangaInfo['data']['relationships']);
+    final getImageString = await GetImage(query: coverID);
+    final title = mangaInfo['data']['attributes']['title']['en'] ?? '';
+    final description =
+        mangaInfo['data']['attributes']['description']['en'] ?? '';
+    return [mangaInfo, getImageString, title, description];
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF1DCD1),
       appBar: AppBar(
-        title: const Text('LIBRARY',
-            style: TextStyle(
-              color: Color(0xff150B0B),
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            )),
-        backgroundColor: const Color(0xFF219F94),
-        elevation: 0.0,
+        title: const Text(
+          'LIBRARY',
+          style: TextStyle(
+            color: Color(0xff150B0B),
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: AppColor.darkCyan,
       ),
       body: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            DropdownButton<String>(
+              value: selectedValue,
+              items: [
+                'All',
+                'Reading',
+                'Completed',
+                'Dropped',
+                'Plan to read',
+                'Re-Reading',
+                'On Hold'
+              ]
+                  .map((String value) => DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      ))
+                  .toList(),
+              onChanged: (newValue) {
+                setState(() async {
+                  selectedValue = newValue!;
+                  await CheckLogin(); // Reload data based on the selected filter
+                });
+              },
+            ),
+            Expanded(child: _buildResults(selectedValue)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResults(String value) {
+    final dataManga = dataReadingStatus['statuses'];
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (dataManga == null) {
+      return const Center(child: Text('No Manga'));
+    } else {
+      final mangaEntries = dataManga.entries.toList();
+      return GridView.builder(
+        itemCount: mangaEntries.length,
+        itemBuilder: (context, index) {
+          final mangaEntry = mangaEntries[index];
+          final mangaID = mangaEntry.key;
+          return FutureBuilder<List<dynamic>>(
+            future: _futures[mangaID],
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final imageUrl =
+                    'https://uploads.mangadex.org/covers/$mangaID/${snapshot.data?[1]}';
+                return Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.grey[300]!, width: 1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        child: const Icon(Icons.filter_alt),
+                      SizedBox(
+                        height: 150,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(10)),
+                          child: CachedNetworkImage(
+                            imageUrl: imageUrl,
+                            placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
                       ),
-                      DropdownButton(
-                        elevation: 12,
-                        underline: Container(),
-                        items: dropDownMenuItems
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                              value: value,
-                              child: Container(
-                                margin: const EdgeInsets.all(10),
-                                child: Text(
-                                  value,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                              ));
-                        }).toList(),
-                        value: selectedValue,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedValue = newValue.toString();
-                          });
-                        },
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Text(
+                          snapshot.data?[2] ?? 'No title',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                        child: Text(
+                          snapshot.data?[3] ?? 'No description',
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[700]),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 3),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, 'chapter',
+                                arguments: mangaID);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text('Read'),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height -
-                      240, // 85 is the total height of other widgets
-                  child: Results(selectedValue),
-                ),
-              ],
-            ),
-          )),
-    );
+                );
+              }
+            },
+          );
+        },
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10.0,
+          mainAxisSpacing: 10.0,
+          childAspectRatio: 0.6,
+        ),
+      );
+    }
   }
 }

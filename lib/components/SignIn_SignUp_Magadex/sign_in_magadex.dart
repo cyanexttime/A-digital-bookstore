@@ -133,7 +133,6 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                   ),
                 ),
               ),
-            
               TextButton(
                 onPressed: () {
                   // Handle register action here
@@ -144,7 +143,6 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                   style: TextStyle(color: Colors.deepOrange),
                 ),
               ),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -161,7 +159,8 @@ class _LoginFormDialogState extends State<LoginFormDialog> {
                       String username = _usernameController.text;
                       String password = _passwordController.text;
                       // Implement login logic here
-                      bool check = await CheckAccountMangadex(username, password);
+                      bool check =
+                          await CheckAccountMangadex(username, password);
                       if (check == true) {
                         Navigator.pop(context, true);
                       } else {

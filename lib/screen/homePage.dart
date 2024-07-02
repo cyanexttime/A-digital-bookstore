@@ -1,6 +1,5 @@
 // ignore: file_names
 
-
 import 'package:flutter/material.dart';
 
 import 'package:oms/Constants/appColor.dart';
@@ -42,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   get _screens => [
         const MangaScreen(),
-        const searchScreen(),
+        const SearchScreen(),
         const LibraryScreen(),
       ];
 
