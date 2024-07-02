@@ -25,6 +25,7 @@ Future<String?> GetAMangaReadingStatus( {
   if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       print(data["status"]);
+      print("schh");
       return data["status"];
   }
   else {

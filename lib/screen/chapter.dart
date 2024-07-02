@@ -23,8 +23,10 @@ import 'package:oms/API/post_manga_read_markers.dart';
 import 'package:oms/API/post_manga_unread_markers.dart';
 import 'package:oms/API/unfollow_manga.dart';
 import 'package:oms/API/post_manga_reading_status.dart';
+import 'package:oms/Constants/appColor.dart';
 import 'package:oms/components/SignIn_SignUp_Magadex/sign_in_magadex.dart';
 import 'package:oms/components/api_variables.dart';
+import 'package:oms/components/statistics.dart';
 import 'package:oms/models/items_model.dart';
 import 'package:oms/provider/bookmark_model.dart';
 import 'package:oms/provider/chapter_model.dart';
@@ -101,19 +103,10 @@ class _ChapterState extends State<Chapter> {
       LoadMangaInfo(mangaID),
       LoadChapterList(mangaID),
       LoadVolumesAndChapters(mangaID),
-      LoadReadingStatus(mangaID),
       LoadMangaReadMarkers(mangaID),
     ]);
   }
 
-  Map<String, String> changeTemp = {
-    "on_hold": "On Hold",
-    "reading": "Reading",
-    "dropped": "Dropped",
-    "plan_to_read": "Plan to Read",
-    "completed": "Completed",
-    "re_reading": "Re-reading",
-  };
   Future<void> LoadMangaReadMarkers(String value) async {
     bookmarkBloc = Provider.of<BookmarkBloc>(context, listen: false);
     bookmarkBloc.init();
@@ -124,7 +117,7 @@ class _ChapterState extends State<Chapter> {
       for (var value in dataBookMarkers) {
         List<dynamic> temp = await GetChapterInformation(chapterID: value);
         ItemModel item = ItemModel(
-          nameChapter: '${temp[2] ?? 'No chapter'} - ${temp[0] ?? 'No title'}', 
+          nameChapter: '${temp[2] ?? 'No chapter'} - ${temp[0] ?? 'No title'}',
           transLanguage: temp[1] ?? 'No language',
           chapterID: value,
         );
@@ -133,16 +126,6 @@ class _ChapterState extends State<Chapter> {
       print(dataBookMarkers.length);
     } else {
       bookmarkBloc.SetCount(0);
-    }
-  }
-
-  Future<void> LoadReadingStatus(String value) async {
-    final statusdata = await GetAMangaReadingStatus(query: '$value');
-    if (statusdata != null) {
-      currentStatus = statusdata.toString();
-      currentStatus = changeTemp[currentStatus]!;
-    } else {
-      currentStatus = 'None';
     }
   }
 
@@ -303,26 +286,33 @@ class _ChapterState extends State<Chapter> {
                   final chapter = item[chapterkey] ?? {};
                   return StatefulBuilder(
                     builder: (context, setState) {
-                      bool isBookmarked = dataBookMarkers.contains(chapter['id']);
+                      bool isBookmarked =
+                          dataBookMarkers.contains(chapter['id']);
                       bookmarkBloc = Provider.of<BookmarkBloc>(context);
 
                       return FutureBuilder<List<dynamic>>(
-                          future:  Provider.of<ChapterInfoProvider>(context, listen: false).getChapterInformation(chapter['id']),
+                          future: Provider.of<ChapterInfoProvider>(context,
+                                  listen: false)
+                              .getChapterInformation(chapter['id']),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             }
-                            final List? chapterBonus = snapshot.data; // List ? có nghĩa nó có thể giá trị null 
-                   
+                            final List? chapterBonus = snapshot
+                                .data; // List ? có nghĩa nó có thể giá trị null
+
                             return GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(context,'chapterContent',arguments: chapter['id']);
+                                Navigator.pushNamed(context, 'chapterContent',
+                                    arguments: chapter['id']);
                               },
                               child: ListTile(
                                 title: Text(
-                                    'Ch.${chapter['chapter'] ?? ''}-${chapterBonus![0] ?? 'No title'}' 
-                                  ),
-                                subtitle: Text('Translation language: ${chapterBonus![1] ?? 'No language'}'),
+                                    'Ch.${chapter['chapter'] ?? ''}-${chapterBonus![0] ?? 'No title'}'),
+                                subtitle: Text(
+                                    'Translation language: ${chapterBonus![1] ?? 'No language'}'),
                                 trailing: IconButton(
                                   icon: Icon(
                                     isBookmarked
@@ -342,10 +332,11 @@ class _ChapterState extends State<Chapter> {
                                       );
                                     } else {
                                       ItemModel item = ItemModel(
-                                        chapterID: chapter['id'],
-                                        nameChapter:'${chapter['chapter'] ?? ''} - ${chapterBonus![0] ?? 'No title'}' ,
-                                        transLanguage: '${chapterBonus![1] ?? 'No language'}'
-                                      );
+                                          chapterID: chapter['id'],
+                                          nameChapter:
+                                              '${chapter['chapter'] ?? ''} - ${chapterBonus![0] ?? 'No title'}',
+                                          transLanguage:
+                                              '${chapterBonus![1] ?? 'No language'}');
                                       if (isBookmarked) {
                                         dataBookMarkers.remove(chapter['id']);
                                         PostMangaUnReadMarkers(
@@ -407,7 +398,6 @@ class _ChapterState extends State<Chapter> {
     if (apiVariables.isLogin) {
       LoadMangaRating(mangaID);
       LoadMangaReadMarkers(mangaID);
-      
     }
   }
 
@@ -422,8 +412,6 @@ class _ChapterState extends State<Chapter> {
 
   Widget buildSnackBar(BuildContext context) {
     return SizedBox(
-      // height: double.infinity,
-      // width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -431,15 +419,17 @@ class _ChapterState extends State<Chapter> {
             child: ElevatedButton(
               onPressed: () {
                 if (apiVariables.isLogin) {
-                  MessageBoxScreen().showMessageBox(context);
+                  showDialog(
+                      context: context,
+                      builder: (context) => MessageBoxScreen(mangaID: mangaID));
                 } else {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginFormDialog(),
-                        )).then(
-                      (value) => _handleLoginChange(),
-                    );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginFormDialog(),
+                      )).then(
+                    (value) => _handleLoginChange(),
+                  );
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -530,21 +520,29 @@ class _ChapterState extends State<Chapter> {
     return Scaffold(
         backgroundColor: Color(0xFFF1DCD1),
         appBar: AppBar(
-          title: const Text('Chapters'),
-          actions: [
-            Text(bookmarkBloc.count.toString(), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            IconButton(
-              icon: const Icon(Icons.bookmark),
-              style: ButtonStyle(
-                iconSize: MaterialStateProperty.all(30),
+            title: const Text(
+              'Chapters',
+              style: TextStyle(
+                color: Color(0xff150B0B),
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, 'bookmarkPage');
-              },
             ),
-          ],
-          backgroundColor: Color(0xFF219F94),
-        ),
+            actions: [
+              Text(bookmarkBloc.count.toString(),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)),
+              IconButton(
+                icon: const Icon(Icons.bookmark),
+                style: ButtonStyle(
+                  iconSize: MaterialStateProperty.all(30),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, 'bookmarkPage');
+                },
+              ),
+            ],
+            backgroundColor: AppColor.darkCyan),
         body: Container(
             padding: EdgeInsets.all(13),
             child: SingleChildScrollView(
@@ -580,7 +578,7 @@ class _ChapterState extends State<Chapter> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  BuildStatistics(context),
+                  BuildStatistics(mangaID: mangaID),
                   const SizedBox(height: 10),
                   buildSnackBar(context),
                   const SizedBox(height: 10),
@@ -597,49 +595,6 @@ class _ChapterState extends State<Chapter> {
   }
 }
 
-class BuildStatistics extends StatelessWidget {
-  BuildStatistics(BuildContext context);
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: GetStatistics(query: mangaID),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (snapshot.hasData) {
-          final data = snapshot.data;
-          if (data!.isEmpty) {
-            return Center(child: Text('No data'));
-          }
-          return Row(
-            children: [
-              Icon(Icons.star_border, color: Colors.amber),
-              SizedBox(width: 2),
-              Text('${data['rating']['average'].toStringAsFixed(2)}',
-                  style: const TextStyle(fontSize: 20)),
-              SizedBox(width: 8), // Khoảng cách giữa các phần tử
-              Icon(Icons.comment_bank_outlined, color: Colors.blue),
-              SizedBox(width: 2),
-              Text('${data['comments']?['repliesCount'] ?? 0}',
-                  style: const TextStyle(fontSize: 20)),
-              SizedBox(width: 8),
-              Icon(Icons.people_alt_outlined, color: Colors.red),
-              SizedBox(width: 2),
-              Text('${data['follows'] ?? 0}',
-                  style: const TextStyle(fontSize: 20)),
-            ],
-          );
-        }
-        return Center(child: Text('No data'));
-      },
-    );
-  }
-}
 
 Future<void> UpdateManagaRating(String? value) async {
   PostMangaRating(idmanga: mangaID, rating: int.parse(value!)).then((value) {

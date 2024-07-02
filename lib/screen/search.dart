@@ -24,6 +24,8 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
   String query = '';
 
   @override
+  bool get wantKeepAlive => true;
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -41,12 +43,27 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
     // Your implementation of ListAPI goes here.
   }
 
-  Future<void> loadAnimes(String value) async {
-    final data = await getMangasBySearchApi(query: value);
-    setState(() {
-      dataList = data;
-    });
+Future<void> loadAnimes(String value) async {
+  final data = await getMangasBySearchApi(query: value);
+  final newImageUrlMap = <String, String>{};
+
+  for (var manga in data) {
+    final coverID = getCoverID(manga['relationships']);
+    if (coverID != null) {
+      final imageData = await GetFileNameImage(query: coverID);
+      if (imageData.isNotEmpty) {
+        final imageUrl = imageData['data']['attributes']['fileName'];
+        newImageUrlMap[coverID] = imageUrl;
+      }
+    }
   }
+
+  setState(() {
+    dataList = data;
+    imageUrlMap = newImageUrlMap;
+  });
+}
+
 
   String? getCoverID(List<dynamic> relationships) {
     for (var relationship in relationships) {
@@ -89,88 +106,76 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
     );
   }
 
-  Widget searchResults() {
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: dataList.length,
-      itemBuilder: (context, index) {
-        final manga = dataList[index];
-        final coverID = getCoverID(manga['relationships']);
-        final ID = manga['id'];
-        final title = manga['attributes']['title']['en'];
-        final status = manga['attributes']['status'];
+ Widget searchResults() {
+  return ListView.builder(
+    controller: _scrollController,
+    itemCount: dataList.length,
+    itemBuilder: (context, index) {
+      final manga = dataList[index];
+      final coverID = getCoverID(manga['relationships']);
+      final ID = manga['id'];
+      final title = manga['attributes']['title']['en'];
+      final status = manga['attributes']['status'];
+      final imageUrl = coverID != null && imageUrlMap.containsKey(coverID)
+          ? 'https://uploads.mangadex.org/covers/$ID/${imageUrlMap[coverID]}.512.jpg'
+          : null;
 
-        return FutureBuilder<String?>(
-          future: getImage(query: coverID ?? ''),
-          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              final imageUrl = snapshot.data != null
-                  ? 'https://uploads.mangadex.org/covers/$ID/${snapshot.data}.512.jpg'
-                  : null;
-
-              return Column(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, 'chapter', arguments: ID);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(3),
-                      child: Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.all(10.0), // Replace Padding with Container and margin
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              if (imageUrl != null)
-                                Container(
-                                  height: 130, // Adjust the height of the image
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: CachedNetworkImageProvider(imageUrl),
-                                      fit: BoxFit.fitHeight,
-                                    ),
-                                  ),
-                                ),
-                              const SizedBox(height: 10),
-                              Text(
-                                title ?? 'No title',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                status ?? 'Unknown status',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
+      return Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, 'chapter', arguments: ID);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(3),
+              child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  margin: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      if (imageUrl != null)
+                        Container(
+                          height: 130,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(imageUrl),
+                              fit: BoxFit.fitHeight,
+                            ),
                           ),
                         ),
+                      const SizedBox(height: 10),
+                      Text(
+                        title ?? 'No title',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 5),
+                      Text(
+                        status ?? 'Unknown status',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              );
-            }
-          },
-        );
-      },
-    );
-  }
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -208,6 +213,4 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
     );
   }
 
-  @override
-  bool get wantKeepAlive => true;
 }
