@@ -1,5 +1,7 @@
 
 
+// ignore_for_file: unnecessary_getters_setters, avoid_print
+
 import 'package:flutter/foundation.dart';
 
 class ApiVariables  extends ChangeNotifier{

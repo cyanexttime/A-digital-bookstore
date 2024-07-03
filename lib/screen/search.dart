@@ -94,6 +94,7 @@ class _SearchScreenState extends State<SearchScreen>
           borderRadius: BorderRadius.circular(40),
         ),
         hintText: 'Search manga',
+        hintStyle: const TextStyle(color: Color(0xff5D4242)),
         prefixIcon: const Icon(Icons.search, color: Color(0xff5D4242)),
       ),
     );
@@ -106,6 +107,7 @@ class _SearchScreenState extends State<SearchScreen>
       itemBuilder: (context, index) {
         final manga = dataList[index];
         final coverID = getCoverID(manga['relationships']);
+        // ignore: non_constant_identifier_names
         final ID = manga['id'];
         final title = manga['attributes']['title']['en'];
         final status = manga['attributes']['status'];
@@ -178,7 +180,7 @@ class _SearchScreenState extends State<SearchScreen>
             ? Colors.black
             : const Color(0xFFF1DCD1);
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor, 
       appBar: AppBar(
         title: const Text(
           'SEARCH',
@@ -197,7 +199,7 @@ class _SearchScreenState extends State<SearchScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 80,
+              height: 60,
               child: searchBar(),
             ),
             Expanded(

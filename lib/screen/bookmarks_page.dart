@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:oms/Constants/appColor.dart';
 import 'package:oms/provider/bookmark_model.dart';
 import 'package:provider/provider.dart';
 
@@ -13,18 +12,21 @@ class _BookmarksPageState extends State<BookmarksPage> {
   @override
   Widget build(BuildContext context) {
     var bookmarkBloc = Provider.of<BookmarkBloc>(context);
+    final Color backgroundColor =
+        Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color(0xFFF1DCD1);
     return Scaffold(
-      backgroundColor: const Color(0xFFF1DCD1),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Text(
           "Bookmarks",
           style: TextStyle(
-            color: Color(0xff150B0B),
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: AppColor.darkCyan, // Thay đổi màu sắc AppBar
+        backgroundColor: const Color(0xFF219F94), // Thay đổi màu sắc AppBar
       ),
       body: SingleChildScrollView(
         child: Padding(

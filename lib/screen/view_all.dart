@@ -11,9 +11,19 @@ class ViewAllManga extends StatelessWidget {
   final String label;
   @override
   Widget build(BuildContext context) {
+    final Color backgroundColor =
+        Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color(0xFFF1DCD1);
     return Scaffold(
       appBar: AppBar(
-        title: Text(label),
+        title: Text(label,
+        style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF219F94),
       ),
       body: FutureBuilder(
           future: getMangaByRankingType(rankingType: rankingType, limit: 500),
@@ -30,6 +40,7 @@ class ViewAllManga extends StatelessWidget {
               error: snapshot.error.toString(),
             );
           }),
+          backgroundColor: backgroundColor,
     );
   }
 }

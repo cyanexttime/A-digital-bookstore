@@ -1,5 +1,7 @@
 
 
+// ignore_for_file: non_constant_identifier_names, avoid_print, prefer_interpolation_to_compose_strings
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:oms/API/get_chapter_content.dart';

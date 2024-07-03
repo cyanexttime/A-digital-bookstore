@@ -28,7 +28,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text(
           'SETTINGS',
           style: TextStyle(
-            
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),

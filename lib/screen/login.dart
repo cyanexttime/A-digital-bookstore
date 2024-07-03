@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +42,7 @@ class _MyLoginState extends State<MyLogin> {
 
       User? user = await _auth.signInWithEmailAndPassword(emailName, passwordName);
       if(user != null){
+        showSnackbar(context,'Login successful');
         print('Dang nhap thanh cong');
         Navigator.pushNamed(context, 'home');
       }else{
@@ -47,8 +50,18 @@ class _MyLoginState extends State<MyLogin> {
       }
   }
 
-
-  @override
+void showSnackbar(BuildContext context, String message) {
+  final snackBar = SnackBar(
+    content: Text(message,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+    ),
+    backgroundColor: Colors.purple,
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+    @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
@@ -60,20 +73,17 @@ class _MyLoginState extends State<MyLogin> {
           body: Stack(
             children: [
               Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Center
-                    (
-                      child:SizedBox(
-                        width: 250,
-                        height: 250,
-                        child:Image.asset('assets/logo.png')
-                      )
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Center(
+                    child: SizedBox(
+                      width: 250,
+                      height: 250,
+                      child: Image.asset('assets/logo.png'),
                     ),
-                    // Thay thế 'path_to_your_logo.png' bằng đường dẫn thực tế đến logo của bạ
-                  ],
-                ),
-
+                  ),
+                ],
+              ),
               SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.only(
@@ -85,9 +95,11 @@ class _MyLoginState extends State<MyLogin> {
                     children: [
                       TextField(
                         controller: _emailController,
+                        style: const TextStyle(color: Colors.black), // Set text color
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          prefixIcon: const Icon(Icons.email_outlined),
+                          labelStyle: const TextStyle(color: Colors.black), // Set label text color
+                          prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                           fillColor: Colors.grey.shade100,
                           filled: true,
                           border: OutlineInputBorder(
@@ -107,18 +119,19 @@ class _MyLoginState extends State<MyLogin> {
                           return null;
                         },
                         obscureText: _isHidden,
+                        style: const TextStyle(color: Colors.black), // Set text color
                         decoration: InputDecoration(
                           labelText: 'Password',
+                          labelStyle: const TextStyle(color: Colors.black), // Set label text color
                           fillColor: Colors.grey.shade100,
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock, color: Colors.black),
                           suffixIcon: IconButton(
                             onPressed: _toggleVisibility,
                             icon: _isHidden
-                                ? const Icon(Icons.visibility_off)
-                                : const Icon(Icons.visibility),
+                                ? const Icon(Icons.visibility_off, color: Colors.black)
+                                : const Icon(Icons.visibility, color: Colors.black),
                           ),
                           filled: true,
-                          // hintText: 'Password',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -129,31 +142,29 @@ class _MyLoginState extends State<MyLogin> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                maximumSize: const Size(170.0, 90.0),
-                                minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: const Color(0xff80669d),
-                                shape: const StadiumBorder(),
-                              ),
-                              onPressed: (){
-                                _signIn(context);
-                              },
-                              child: const Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                //crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('LOG IN',
-                                  style:TextStyle(
-                                    color: Colors.white,
-                                  ) 
-                                  ),
-                                  Icon(
-                                    Icons.lock,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              )),
+                            style: ElevatedButton.styleFrom(
+                              maximumSize: const Size(170.0, 90.0),
+                              minimumSize: const Size(170.0, 60.0),
+                              backgroundColor: const Color(0xff80669d),
+                              shape: const StadiumBorder(),
+                            ),
+                            onPressed: () {
+                              _signIn(context);
+                            },
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'LOG IN',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Icon(
+                                  Icons.lock,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 30.0),

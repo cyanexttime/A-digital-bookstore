@@ -1,9 +1,8 @@
-// ignore_for_file: library_private_types_in_public_api, camel_case_types
+// ignore_for_file: library_private_types_in_public_api, camel_case_types, avoid_print, use_build_context_synchronously, unused_local_variable
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:oms/firebase_auth_implementation/firebase_auth_services.dart';
-
 
 class MyRegister extends StatefulWidget {
   const MyRegister({super.key});
@@ -13,13 +12,13 @@ class MyRegister extends StatefulWidget {
 }
 
 class _myRegisterState extends State<MyRegister> {
-  //
+  // Initialize controllers
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
-  //ket noi toi dich vu firebae
+
+  // Connect to Firebase service
   final FirebaseAuthService _auth = FirebaseAuthService();
 
   @override
@@ -31,7 +30,7 @@ class _myRegisterState extends State<MyRegister> {
     super.dispose();
   }
 
-  //Password Field obscureText  Handler
+  // Password Field obscureText Handler
   bool _isHidden = true;
   void _toggleVisibility() {
     setState(() {
@@ -39,60 +38,68 @@ class _myRegisterState extends State<MyRegister> {
     });
   }
 
-  //xu ly su kien dang ky
-  void _signUp(BuildContext context) async{
-      String userName = _usernameController.text;
-      String emailName = _emailController.text;
-      String phoneName = _phoneController.text;
-      String passwordName = _passwordController.text;
+  // Handle sign-up event
+  void _signUp(BuildContext context) async {
+    String userName = _usernameController.text;
+    String emailName = _emailController.text;
+    String phoneName = _phoneController.text;
+    String passwordName = _passwordController.text;
 
-      User? user = await _auth.signUpWithEmailAndPassword(emailName, passwordName);
-      if(user != null){
-        print('Dang ky thanh cong');
-        Navigator.pushNamed(context, 'home');
-      }else{
-        print('Dang ky that bai');
-      }
+    User? user = await _auth.signUpWithEmailAndPassword(emailName, passwordName);
+    if (user != null) {
+      showSnackbar(context,'Sign up successful');
+      print('Sign up successful');
+      Navigator.pushNamed(context, 'home');
+    } else {
+      print('Sign up failed');
+    }
   }
-
+  void showSnackbar(BuildContext context, String message) {
+  final snackBar = SnackBar(
+    content: Text(message,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+    ),
+    backgroundColor: Colors.purple,
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFFF1DCD1),
-        ),
+        color: const Color(0xFFF1DCD1),
         child: Scaffold(
           appBar: AppBar(
-              elevation: null,
-              backgroundColor: Colors.transparent,
-              leading: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, 'login');
-                },
-                child: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Colors.black,
-                ),
-              )
+            elevation: null,
+            backgroundColor: Colors.transparent,
+            leading: TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'login');
+              },
+              child: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.black,
+              ),
             ),
+          ),
           backgroundColor: Colors.transparent,
           body: Stack(
             children: [
               Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: SizedBox(
-                        width: 215,
-                        height: 215,
-                        child:Image.asset('assets/logo.png')
-                      )
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: Image.asset('assets/logo.png'),
                     ),
-                    // Thay thế 'path_to_your_logo.png' bằng đường dẫn thực tế đến logo của bạ
-                  ],
-                ),
+                  ),
+                ],
+              ),
               SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.only(
@@ -104,26 +111,31 @@ class _myRegisterState extends State<MyRegister> {
                     children: [
                       TextField(
                         controller: _usernameController,
+                        style: const TextStyle(color: Colors.black), // Set text color
                         decoration: InputDecoration(
                           labelText: 'Username',
-                          fillColor: Colors.transparent,
-                          prefixIcon: const Icon(Icons.people_outline),
+                          labelStyle: const TextStyle(color: Colors.black), // Set label text color
+                          fillColor: Colors.grey.shade100,
+                          prefixIcon: const Icon(Icons.people_outline, color: Colors.black),
                           filled: true,
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(
-                                color: Colors.white,
-                              )),
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 30.0),
                       TextField(
                         controller: _emailController,
+                        style: const TextStyle(color: Colors.black), // Set text color
                         decoration: InputDecoration(
-                          fillColor: Colors.transparent,
-                          prefixIcon: const Icon(Icons.email_outlined),
+                          fillColor: Colors.grey.shade100,
+                          prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                           filled: true,
                           labelText: 'Email',
+                          labelStyle: const TextStyle(color: Colors.black), // Set label text color
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             borderSide: const BorderSide(
@@ -135,11 +147,13 @@ class _myRegisterState extends State<MyRegister> {
                       const SizedBox(height: 30.0),
                       TextField(
                         controller: _phoneController,
+                        style: const TextStyle(color: Colors.black), // Set text color
                         decoration: InputDecoration(
-                          fillColor: Colors.transparent,
-                          prefixIcon: const Icon(Icons.phone),
+                          fillColor: Colors.grey.shade100,
+                          prefixIcon: const Icon(Icons.phone, color: Colors.black),
                           filled: true,
                           labelText: 'Phone',
+                          labelStyle: const TextStyle(color: Colors.black), // Set label text color
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             borderSide: const BorderSide(
@@ -151,18 +165,20 @@ class _myRegisterState extends State<MyRegister> {
                       const SizedBox(height: 30.0),
                       TextField(
                         controller: _passwordController,
+                        style: const TextStyle(color: Colors.black), // Set text color
                         obscureText: _isHidden,
                         decoration: InputDecoration(
-                          fillColor: Colors.transparent,
-                          prefixIcon: const Icon(Icons.lock),
+                          fillColor: Colors.grey.shade100,
+                          prefixIcon: const Icon(Icons.lock, color: Colors.black),
                           suffixIcon: IconButton(
                             onPressed: _toggleVisibility,
                             icon: _isHidden
-                                ? const Icon(Icons.visibility)
-                                : const Icon(Icons.visibility_off),
+                                ? const Icon(Icons.visibility, color: Colors.black)
+                                : const Icon(Icons.visibility_off, color: Colors.black),
                           ),
                           filled: true,
                           labelText: 'Password',
+                          labelStyle: const TextStyle(color: Colors.black), // Set label text color
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             borderSide: const BorderSide(
@@ -176,31 +192,29 @@ class _myRegisterState extends State<MyRegister> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                maximumSize: const Size(170.0, 90.0),
-                                minimumSize: const Size(170.0, 60.0),
-                                backgroundColor: const Color(0xff80669d),
-                                shape: const StadiumBorder(),
-                              ),
-                              onPressed: () {
-                                _signUp(context);
-                              },
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                //crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('REGISTER',
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),
-                                  ),
-                                  Icon(
-                                    Icons.content_paste_rounded,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              )),
+                            style: ElevatedButton.styleFrom(
+                              maximumSize: const Size(170.0, 90.0),
+                              minimumSize: const Size(170.0, 60.0),
+                              backgroundColor: const Color(0xff80669d),
+                              shape: const StadiumBorder(),
+                            ),
+                            onPressed: () {
+                              _signUp(context);
+                            },
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'REGISTER',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Icon(
+                                  Icons.content_paste_rounded,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 30.0),

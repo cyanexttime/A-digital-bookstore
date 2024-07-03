@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, unused_element, avoid_print
+
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +16,6 @@ import 'package:oms/API/post_manga_rating.dart';
 import 'package:oms/API/post_manga_read_markers.dart';
 import 'package:oms/API/post_manga_unread_markers.dart';
 import 'package:oms/API/unfollow_manga.dart';
-import 'package:oms/Constants/appColor.dart';
 import 'package:oms/components/SignIn_SignUp_Magadex/sign_in_magadex.dart';
 import 'package:oms/components/api_variables.dart';
 import 'package:oms/components/statistics.dart';
@@ -119,7 +120,7 @@ class _ChapterState extends State<Chapter> {
   Future<void> LoadMangaRating(String value) async {
     final rating = await GetMangaRating(query: value);
     setState(() {
-      ratingValue = rating.toString() ?? '0';
+      ratingValue = rating.toString();
     });
   }
 
@@ -366,14 +367,10 @@ class _ChapterState extends State<Chapter> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: const TextStyle(
-                color: Colors.black,
-                fontSize: 22,
-                fontWeight: FontWeight.bold)),
-        Text(japanese, style: const TextStyle(color: Colors.black, fontSize: 15)),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        Text(japanese, style: const TextStyle(fontSize: 15)),
         Text(author,
             style: const TextStyle(
-              color: Colors.black,
               fontSize: 15,
             )),
       ],
@@ -437,7 +434,7 @@ class _ChapterState extends State<Chapter> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 1),
+                border: Border.all(color: Colors.grey, width: 1),
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.centerLeft,
@@ -469,12 +466,10 @@ class _ChapterState extends State<Chapter> {
                         }
                       },
                       items: _evaluationOptions.map(buildMenuItem).toList(),
-                      dropdownColor: Colors.white,
+                      dropdownColor: Colors.black,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30),
-                      iconEnabledColor: Colors.black,
+                          fontWeight: FontWeight.bold, fontSize: 30),
+                      iconEnabledColor: Colors.grey,
                       underline: Container(),
                       iconSize: 30,
                     )),
@@ -503,13 +498,16 @@ class _ChapterState extends State<Chapter> {
   @override
   Widget build(BuildContext context) {
     bookmarkBloc = Provider.of<BookmarkBloc>(context);
+    final Color backgroundColor =
+        Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color(0xFFF1DCD1);
     return Scaffold(
-        backgroundColor: const Color(0xFFF1DCD1),
+        backgroundColor: backgroundColor,
         appBar: AppBar(
             title: const Text(
               'Chapters',
               style: TextStyle(
-                color: Color(0xff150B0B),
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
@@ -528,7 +526,7 @@ class _ChapterState extends State<Chapter> {
                 },
               ),
             ],
-            backgroundColor: AppColor.darkCyan),
+            backgroundColor: const Color(0xFF219F94)),
         body: Container(
             padding: const EdgeInsets.all(13),
             child: SingleChildScrollView(
@@ -547,8 +545,8 @@ class _ChapterState extends State<Chapter> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 5,
                                 blurRadius: 7,
-                                offset:
-                                    const Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
@@ -570,7 +568,6 @@ class _ChapterState extends State<Chapter> {
                   const SizedBox(height: 10),
                   Text(description,
                       style: const TextStyle(
-                        color: Colors.black,
                         fontSize: 15,
                       )),
                   const SizedBox(height: 10),

@@ -13,9 +13,17 @@ class MangaScreen extends StatefulWidget {
 class _MangaScreenState extends State<MangaScreen> {
   @override
   Widget build(BuildContext context) {
+    final Color backgroundColor =
+        Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color(0xFFF1DCD1);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ODESSEY'),
+        title: const Text('ODESSEY',
+        style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),),
         actions: [
           IconButton(
             onPressed: () {
@@ -27,6 +35,7 @@ class _MangaScreenState extends State<MangaScreen> {
             icon: const Icon(Icons.person),
           ),
         ],
+        backgroundColor: const Color(0xFF219F94),
       ),
       body: const SingleChildScrollView(
         child: Column(
@@ -63,8 +72,11 @@ class _MangaScreenState extends State<MangaScreen> {
                   ],
                 ))
           ],
+          
         ),
+        
       ),
+      backgroundColor: backgroundColor,
     );
   }
 }

@@ -34,6 +34,9 @@ class MangaDetailsScreen extends StatelessWidget {
 
         if (snapshot.data != null) {
           final manga = snapshot.data;
+          final Color backgroundColor = Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color(0xFFF1DCD1);
           return Scaffold(
             body: SingleChildScrollView(
               child: Column(
@@ -103,6 +106,7 @@ class MangaDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            backgroundColor: backgroundColor,
           );
         }
 

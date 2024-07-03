@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, avoid_print, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:oms/API/get_a_manga_reading_status.dart';
 import 'package:oms/API/post_manga_reading_status.dart';
