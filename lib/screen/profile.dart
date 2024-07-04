@@ -171,6 +171,7 @@ class _ProfileEditScreenState extends State<ProfileScreen> {
                 ),
                 TextFormField(
                   controller: _emailController,
+                  readOnly:true,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     filled: true,
