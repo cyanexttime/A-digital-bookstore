@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print, use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -40,13 +42,23 @@ class _MyLoginState extends State<MyLogin> {
 
       User? user = await _auth.signInWithEmailAndPassword(emailName, passwordName);
       if(user != null){
+        showSnackbar(context,'Login successful');
         print('Dang nhap thanh cong');
         Navigator.pushNamed(context, 'home');
       }else{
         print('Dang nhap that bai');
       }
   }
-
+  void showSnackbar(BuildContext context, String message) {
+  final snackBar = SnackBar(
+    content: Text(message,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+    ),
+    backgroundColor: Colors.purple,
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);}
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +97,11 @@ class _MyLoginState extends State<MyLogin> {
                     children: [
                       TextField(
                         controller: _emailController,
+                        style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          prefixIcon: const Icon(Icons.email_outlined),
+                          labelStyle: const TextStyle(color: Colors.black),
+                          prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                           fillColor: Colors.grey.shade100,
                           filled: true,
                           border: OutlineInputBorder(
@@ -107,15 +121,17 @@ class _MyLoginState extends State<MyLogin> {
                           return null;
                         },
                         obscureText: _isHidden,
+                        style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           labelText: 'Password',
+                          labelStyle: const TextStyle(color: Colors.black),
                           fillColor: Colors.grey.shade100,
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock, color: Colors.black),
                           suffixIcon: IconButton(
                             onPressed: _toggleVisibility,
                             icon: _isHidden
-                                ? const Icon(Icons.visibility_off)
-                                : const Icon(Icons.visibility),
+                                ? const Icon(Icons.visibility_off, color: Colors.black)
+                                : const Icon(Icons.visibility, color: Colors.black),
                           ),
                           filled: true,
                           // hintText: 'Password',

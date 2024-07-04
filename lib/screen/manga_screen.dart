@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:oms/Constants/appColor.dart';
 import 'package:oms/common/styles/paddings.dart';
 import 'package:oms/view/FeaturedMangas.dart';
 import 'package:oms/widgets/TopMangasList.dart';
-
+import 'package:oms/screen/profile.dart';
 class MangaScreen extends StatefulWidget {
   const MangaScreen({super.key});
 
@@ -19,22 +18,23 @@ class _MangaScreenState extends State<MangaScreen> {
             ? Colors.black
             : const Color(0xFFF1DCD1);
     return Scaffold(
-      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF219F94),
-        title: const Text(
-          'ODESSEY',
-          style: TextStyle(
+        title: const Text('ODESSEY',
+        style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-          ),
-        ),
+          ),),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );},
             icon: const Icon(Icons.person),
           ),
         ],
+        backgroundColor: const Color(0xFF219F94),
       ),
       body: const SingleChildScrollView(
         child: Column(
@@ -73,6 +73,7 @@ class _MangaScreenState extends State<MangaScreen> {
           ],
         ),
       ),
+      backgroundColor: backgroundColor,
     );
   }
 }

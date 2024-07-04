@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:oms/API/get_filename_image.dart';
@@ -94,6 +96,7 @@ class _SearchScreenState extends State<SearchScreen>
           borderRadius: BorderRadius.circular(40),
         ),
         hintText: 'Search manga',
+        hintStyle: const TextStyle(color: Color(0xff5D4242)),
         prefixIcon: const Icon(Icons.search, color: Color(0xff5D4242)),
       ),
     );
@@ -188,7 +191,6 @@ class _SearchScreenState extends State<SearchScreen>
           ),
         ),
         backgroundColor: const Color(0xFF219F94),
-        elevation: 10,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

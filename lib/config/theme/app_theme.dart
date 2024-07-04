@@ -11,7 +11,6 @@ class AppTheme {
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(
-        backgroundColor: Colors.black,
         color: Colors.white,
       ),
     ),
@@ -39,7 +38,6 @@ class AppTheme {
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(
-        backgroundColor: Colors.white,
         color: Colors.black,
       ),
     ),

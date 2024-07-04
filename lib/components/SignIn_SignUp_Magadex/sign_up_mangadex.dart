@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, library_private_types_in_public_api, use_build_context_synchronously, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -62,13 +64,18 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
   }
 
   Widget Decrepsion() {
+    final Color backgroundColor =
+        Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : Colors.black;
     return RichText(
       text:TextSpan(
         text: "You can get your Client ID and Secret ID by registering an account on Mangadex website. For more information, please visit",
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(color: backgroundColor),
         children: [
-          const TextSpan(
+          TextSpan(
             text: "\nMangadex registration link: ",
+            style: TextStyle(color: backgroundColor )
           ),
           TextSpan(
             text: "https://mangadex.org/",
@@ -78,8 +85,9 @@ class _RegisterFormDialogState extends State<RegisterFormDialog> {
                  launchUrl(Uri.parse("https://mangadex.org/"));
               },
           ),
-          const TextSpan(
+          TextSpan(
             text: "\nApiclient registration link: ",
+            style: TextStyle(color: backgroundColor )
           ),
           TextSpan(
             text: "https://mangadex.org/",

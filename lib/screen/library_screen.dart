@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, avoid_print
 
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -68,13 +68,16 @@ class _LibraryScreenState extends State<LibraryScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final Color backgroundColor =
+        Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color(0xFFF1DCD1);
     return Scaffold(
-      backgroundColor: const Color(0xFFF1DCD1),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Text(
           'LIBRARY',
           style: TextStyle(
-            color: Color(0xff150B0B),
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),

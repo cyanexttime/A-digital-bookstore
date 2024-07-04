@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, avoid_print
+
 import 'package:http/http.dart' as http;
 
 Future<String> ListAPI() async {
