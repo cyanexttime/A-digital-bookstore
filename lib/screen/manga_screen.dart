@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oms/Constants/appColor.dart';
 import 'package:oms/common/styles/paddings.dart';
 import 'package:oms/view/FeaturedMangas.dart';
 import 'package:oms/widgets/TopMangasList.dart';
@@ -13,9 +14,21 @@ class MangaScreen extends StatefulWidget {
 class _MangaScreenState extends State<MangaScreen> {
   @override
   Widget build(BuildContext context) {
+    final Color backgroundColor =
+        Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color(0xFFF1DCD1);
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('ODESSEY'),
+        backgroundColor: const Color(0xFF219F94),
+        title: const Text(
+          'ODESSEY',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {},
