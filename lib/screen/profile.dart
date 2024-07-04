@@ -27,10 +27,14 @@ class _ProfileEditScreenState extends State<ProfileScreen> {
   final user = FirebaseAuth.instance.currentUser;
   if (user != null) {
     final userEmail = user.email;
+    final displayName = user.displayName ?? '';
+    final phoneNumber = user.phoneNumber ?? '';
+
     final profileQuery = await FirebaseFirestore.instance
         .collection('profiles')
         .where('email', isEqualTo: userEmail)
         .get();
+    
     if (profileQuery.docs.isNotEmpty) {
       final profileData = profileQuery.docs.first.data();
       setState(() {
@@ -41,9 +45,24 @@ class _ProfileEditScreenState extends State<ProfileScreen> {
           _selectedDate = DateTime.parse(profileData['dateOfBirth']);
         }
       });
+    } else {
+      FirebaseFirestore.instance.collection('profiles').add({
+        'name': displayName,
+        'email': userEmail,
+        'phoneNumber': phoneNumber,
+      }).then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile created successfully')),
+        );
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create profile: $error')),
+        );
+      });
     }
   }
 }
+
 
   bool _isValidEmail(String email) {
     final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
@@ -74,6 +93,8 @@ class _ProfileEditScreenState extends State<ProfileScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final email = user.email;
+      final displayName = user.displayName ?? _nameController.text;
+      final phoneNumber = user.phoneNumber ?? _phoneNumberController.text;
       final profileQuery = await FirebaseFirestore.instance
           .collection('profiles')
           .where('email', isEqualTo: email)
@@ -81,8 +102,8 @@ class _ProfileEditScreenState extends State<ProfileScreen> {
       if (profileQuery.docs.isNotEmpty) {
         final docId = profileQuery.docs.first.id;
         FirebaseFirestore.instance.collection('profiles').doc(docId).update({
-          'name': _nameController.text,
-          'phoneNumber': _phoneNumberController.text,
+          'name': _nameController.text.isEmpty ? displayName : _nameController.text,
+          'phoneNumber': _phoneNumberController.text.isEmpty ? phoneNumber : _phoneNumberController.text,
           'dateOfBirth': _selectedDate?.toIso8601String().split('T').first,
         }).then((value) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -95,9 +116,9 @@ class _ProfileEditScreenState extends State<ProfileScreen> {
         });
       } else {
         FirebaseFirestore.instance.collection('profiles').add({
-          'name': _nameController.text,
+          'name': _nameController.text.isEmpty ? displayName : _nameController.text,
           'email': email,
-          'phoneNumber': _phoneNumberController.text,
+          'phoneNumber': _phoneNumberController.text.isEmpty ? phoneNumber : _phoneNumberController.text,
           'dateOfBirth': _selectedDate?.toIso8601String().split('T').first,
         }).then((value) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -217,18 +238,21 @@ class _ProfileEditScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 20),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: _saveProfile,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: const Color(0xFF219F94),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: ElevatedButton(
+                      onPressed: _saveProfile,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white, backgroundColor: const Color(0xFF219F94),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-                    ),
-                    child: const Text(
-                      'Save Profile',
-                      style: TextStyle(fontSize: 18),
+                      child: const Text(
+                        'Save Profile',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                 ),
